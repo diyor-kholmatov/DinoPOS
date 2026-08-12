@@ -1,0 +1,10 @@
+.DS_Store
+*.zip
+
+# Internal design and validation artifacts are not part of the public site.
+UI_UX_AUDIT.md
+design-system.html
+register.html
+verify.mjs
+tests/
+retailos-prototype/
