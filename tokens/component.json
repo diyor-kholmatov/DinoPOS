@@ -1,0 +1,19 @@
+{
+  "component": {
+    "navigationRail": {
+      "compactWidth": { "value": "72px" },
+      "expandedWidth": { "value": "232px" },
+      "itemHeight": { "value": "48px" }
+    },
+    "control": {
+      "height": { "value": "44px" },
+      "smallHeight": { "value": "36px" }
+    },
+    "page": {
+      "desktopPadding": { "value": "24px" },
+      "tabletPadding": { "value": "20px" },
+      "mobilePadding": { "value": "16px" }
+    }
+  }
+}
+

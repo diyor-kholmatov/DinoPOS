@@ -1,5 +1,13 @@
 .DS_Store
 *.zip
+node_modules/
+dist/
+storybook-static/
+coverage/
+playwright-report/
+test-results/
+artifacts/
+*.tsbuildinfo
 
 # Internal design and validation artifacts are not part of the public site.
 UI_UX_AUDIT.md

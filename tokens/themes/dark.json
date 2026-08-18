@@ -1,0 +1,22 @@
+{
+  "color": {
+    "surface": {
+      "canvas": { "value": "{color.neutral.950}" },
+      "panel": { "value": "{color.dark.panel}" },
+      "raised": { "value": "{color.dark.raised}" },
+      "sunken": { "value": "#111318" },
+      "overlay": { "value": "rgb(0 0 0 / 0.68)" }
+    },
+    "border": {
+      "default": { "value": "{color.dark.border}" },
+      "strong": { "value": "#3B3F49" }
+    },
+    "text": {
+      "primary": { "value": "{color.neutral.0}" },
+      "secondary": { "value": "{color.dark.muted}" },
+      "muted": { "value": "#777B84" },
+      "inverse": { "value": "{color.neutral.950}" }
+    }
+  }
+}
+

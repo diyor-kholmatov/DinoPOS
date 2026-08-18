@@ -1,0 +1,33 @@
+{
+  "color": {
+    "action": {
+      "primary": { "value": "{color.lime.500}" },
+      "primaryHover": { "value": "{color.lime.700}" },
+      "primaryText": { "value": "{color.neutral.950}" }
+    },
+    "status": {
+      "positive": { "value": "{color.semantic.positive}" },
+      "warning": { "value": "{color.semantic.warning}" },
+      "danger": { "value": "{color.semantic.danger}" },
+      "information": { "value": "{color.semantic.information}" }
+    },
+    "chart": {
+      "one": { "value": "{color.data.1}" },
+      "two": { "value": "{color.data.2}" },
+      "three": { "value": "{color.data.3}" },
+      "four": { "value": "{color.data.4}" },
+      "five": { "value": "{color.data.5}" }
+    }
+  },
+  "focus": {
+    "width": { "value": "3px" },
+    "offset": { "value": "2px" }
+  },
+  "size": {
+    "touchTarget": { "value": "44px" },
+    "primaryAction": { "value": "48px" },
+    "compactRow": { "value": "44px" },
+    "comfortableRow": { "value": "52px" }
+  }
+}
+

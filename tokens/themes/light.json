@@ -1,0 +1,22 @@
+{
+  "color": {
+    "surface": {
+      "canvas": { "value": "{color.neutral.25}" },
+      "panel": { "value": "{color.neutral.50}" },
+      "raised": { "value": "{color.neutral.0}" },
+      "sunken": { "value": "{color.neutral.100}" },
+      "overlay": { "value": "rgb(26 26 22 / 0.46)" }
+    },
+    "border": {
+      "default": { "value": "{color.neutral.200}" },
+      "strong": { "value": "#CFCFC6" }
+    },
+    "text": {
+      "primary": { "value": "{color.neutral.900}" },
+      "secondary": { "value": "{color.neutral.600}" },
+      "muted": { "value": "{color.neutral.500}" },
+      "inverse": { "value": "{color.neutral.0}" }
+    }
+  }
+}
+
