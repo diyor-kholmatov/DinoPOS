@@ -52,6 +52,18 @@ test("desktop checkout has no serious accessibility violations", async ({ page }
   expect(results.violations).toEqual([]);
 });
 
+test("profile controls open and switch theme without runtime errors", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Desktop rail owns the persistent profile control");
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.getByRole("button", { name: "Profile" }).click();
+  const themeButton = page.getByRole("button", { name: "Toggle theme" });
+  await expect(themeButton).toBeVisible();
+  await themeButton.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  expect(errors).toEqual([]);
+});
+
 test("layout remains usable without horizontal overflow", async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
