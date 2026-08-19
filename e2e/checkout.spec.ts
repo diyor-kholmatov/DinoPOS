@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.clear());
-  await page.goto("/");
+  await page.goto("/checkout");
   await expect(page).toHaveURL(/\/checkout$/);
 });
 

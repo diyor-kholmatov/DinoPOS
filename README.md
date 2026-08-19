@@ -1,47 +1,32 @@
-# RetailOS Unified Prototype
+# DinoPOS
 
-This direct-open HTML/CSS/JavaScript application combines the original
-RetailOS visual foundation with the Inventory and Cash Register specifications.
+DinoPOS is a React and TypeScript point-of-sale workspace for retail and service businesses.
 
-Open `index.html` for the dashboard or `checkout.html` for the POS.
+## Current release
 
-## Modules
+- Production Checkout with product search and barcode entry
+- Open-shift validation and compact register status
+- Cash, card, QR, transfer, debt, and prepayment workflows
+- Stock, customer balance, register cash, fiscal queue, receipt, and draft persistence
+- Responsive desktop, tablet, and mobile layouts
+- English, Russian, and Uzbek interfaces
+- Option A light and dark design tokens
 
-- Dashboard, Checkout, Sales, Catalog, Import, Suppliers
-- Inventory and Stocktake, Branch Transfer
-- Clients, Reports, Configuration
-- Sale Drafts, Returns and Exchanges, Holds and Deposits
-- Cash Shift, Cash Operations, Register History
+The remaining modules are being migrated incrementally and currently show a clear pending state.
 
-## Product rules represented
+## Local development
 
-- Atomic entitlement keys gate shift, cash, fiscal, close-count, and history features.
-- Basic mode creates a clearly marked non-fiscal sales slip.
-- Full mode requires an open shift before payment, returns, or cash movement.
-- Drafts are local-first and never reserve stock.
-- Held goods reduce available-to-sell but remain in physical on-hand stock.
-- Money and stock changes write shared attributed movement records.
-- Customer deposit balance is derived from signed transactions.
-- Canonical operational values are independent from their translated display labels.
-- UZS amounts and dates use the active locale's formatting rules.
+```bash
+pnpm install
+pnpm dev
+```
 
-Prototype data is stored in browser local storage under
-`retailos-unified-brief-v5-i18n`.
+## Verification
 
-## Localization
+```bash
+pnpm check
+pnpm test:e2e
+pnpm build-storybook
+```
 
-The full interface is available in English, Russian, and Uzbek. Translation
-files live in `js/locales/` and use stable, namespaced message keys such as
-`inventory.lowStock`, `checkout.paymentSuccess`, and `status.completed`.
-
-To add another language:
-
-1. Copy `js/locales/en.js` and keep the same message keys.
-2. Translate values without changing placeholders such as `{amount}` or `{count}`.
-3. Load the new locale file before `js/app.js`.
-4. Add the locale code to `BROWSER_LOCALES` and both language selectors.
-5. Run `node tests/i18n.cjs` and `node tests/smoke.cjs`.
-
-`window.NOVA_LOCALES.__source` is a compatibility layer for legacy prototype
-copy. New features should call `tr("namespace.message")` and store status codes
-or domain values separately from translated labels.
+The v6 compatibility layer reads `retailos-unified-brief-v5-i18n`, stores an untouched backup in `dinopos-v5-backup`, and migrates supported records into typed Zustand stores.

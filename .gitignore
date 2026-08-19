@@ -9,11 +9,10 @@ test-results/
 artifacts/
 *.tsbuildinfo
 
-# Internal design and validation artifacts are not part of the public site.
+# Local design and validation artifacts.
 UI_UX_AUDIT.md
 design-system.html
 register.html
 verify.mjs
-js/locales/README.md
-tests/
+/tests/
 retailos-prototype/

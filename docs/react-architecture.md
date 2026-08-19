@@ -1,10 +1,10 @@
-# DinoPOS React Architecture Proposal
+# DinoPOS React Architecture
 
 ## Delivery Strategy
 
-The migration is incremental and route-gated. The published legacy application
-remains intact while the React shell and Checkout pilot are reviewed. Legacy
-routes are removed only after full parity.
+The React application is the only published DinoPOS client. Checkout is the
+first production module; remaining routes stay inside the shared shell and show
+an explicit pending state until their business workflows are migrated.
 
 ## Project Structure
 
@@ -79,13 +79,10 @@ corrupt, and already-migrated data.
 ## Routing and GitHub Pages
 
 - Vite base is `/DinoPOS/` in production and `/` in development.
-- React Router uses a browser router in development and a GitHub Pages rewrite
-  strategy in production.
-- `404.html` restores the requested path through a query redirect before the
-  router starts.
-- Legacy HTML routes redirect to their corresponding React routes while
-  preserving query and hash values.
-- `/` redirects to `/dashboard`.
+- React Router uses a browser router in development and production.
+- The production build copies the application shell to `404.html`, allowing
+  GitHub Pages to serve direct route requests before React Router starts.
+- `/` redirects to `/checkout`.
 
 ## Design-System Layers
 
@@ -97,7 +94,7 @@ corrupt, and already-migrated data.
 5. Product patterns compose primitives without inventing new visual rules.
 6. Storybook documents foundations, composition, and every operational state.
 
-## Checkout Pilot Boundaries
+## Checkout Release Boundaries
 
 The pilot migrates the complete checkout workflow, not a visual shell:
 
@@ -110,9 +107,9 @@ The pilot migrates the complete checkout workflow, not a visual shell:
 - sale completion, stock/customer/cash side effects, receipt confirmation;
 - keyboard operation, mobile catalog/cart switching, and persisted restore.
 
-Non-checkout navigation routes display an explicit migration placeholder in the
-pilot branch and link back to the still-available legacy page. They are not
-silently reimplemented with incomplete logic.
+Non-checkout navigation routes display an explicit pending state. They are not
+silently reimplemented with incomplete logic or linked to removed prototype
+pages.
 
 ## Test Pyramid
 
@@ -123,11 +120,11 @@ silently reimplemented with incomplete logic.
 - Playwright: startup, locale/store switch, open shift, add/change product,
   customer, discount, payment, completion, Local Storage restore, keyboard and
   mobile navigation.
-- Legacy browser tests continue running until the last route is migrated.
+- The deployed `404.html` is verified alongside the production entry so direct
+  GitHub Pages routes resolve to the same application.
 
-## Approval Gate
+## Module Gate
 
-The remaining modules do not move to React until the Checkout pilot, token
-system, Storybook, Navigation Rail, persistence migration, and test evidence are
-reviewed and approved.
-
+Each remaining module moves from pending to production only after its domain
+commands, persistence behavior, translations, responsive states, and automated
+tests are complete.
