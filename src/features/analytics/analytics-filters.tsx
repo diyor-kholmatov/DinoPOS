@@ -50,7 +50,7 @@ export function StorePicker({
           variant={prominent ? "quiet" : "secondary"}
           className={cn(
             "gap-2",
-            prominent && "-ml-3 h-auto min-h-0 px-3 py-1 text-2xl font-bold",
+            prominent && "-ml-2 h-10 min-h-10 px-2 text-2xl font-semibold leading-[30px] text-ink",
             className,
           )}
         >
@@ -58,7 +58,7 @@ export function StorePicker({
           {selectedStores.length === stores.length
             ? t("dashboard.allStores")
             : t("dashboard.storesSelected", { count: selectedStores.length })}
-          {prominent ? <ChevronDown className="size-5 text-faint" aria-hidden="true" /> : null}
+          {prominent ? <ChevronDown className="size-4 text-faint" aria-hidden="true" /> : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 p-1">
@@ -92,6 +92,7 @@ export function AnalyticsFilters({
   range,
   onRangeChange,
   showStore = true,
+  integrated = false,
   className,
 }: {
   period: AnalyticsPeriod;
@@ -101,12 +102,17 @@ export function AnalyticsFilters({
   range: RangeValue<CalendarDate>;
   onRangeChange: (range: RangeValue<CalendarDate>) => void;
   showStore?: boolean;
+  integrated?: boolean;
   className?: string;
 }) {
   const { t } = useTranslation();
 
   return (
-    <section aria-label={t("dashboard.analyticsFilters")} className={cn("mt-5 flex flex-wrap items-center gap-2", className)}>
+    <section aria-label={t("dashboard.analyticsFilters")} className={cn(
+      "mt-5 flex flex-wrap items-center gap-2",
+      integrated && "w-fit max-w-full gap-1 rounded-md bg-panel p-1",
+      className,
+    )}>
       <SegmentedControl
         label={t("dashboard.periodLabel")}
         value={period}
@@ -122,16 +128,20 @@ export function AnalyticsFilters({
           { id: "month", label: t("dashboard.periodMonth") },
           { id: "year", label: t("dashboard.periodYear") },
         ]}
+        integrated={integrated}
       />
       {showStore ? <StorePicker selectedStores={selectedStores} onStoresChange={onStoresChange} /> : null}
-      <DateRangeField
-        label={t("dashboard.dateRange")}
-        value={range}
-        onChange={(next) => {
-          onPeriodChange("custom");
-          onRangeChange(next);
-        }}
-      />
+      <div className={integrated ? "border-l border-border pl-1" : undefined}>
+        <DateRangeField
+          label={t("dashboard.dateRange")}
+          value={range}
+          compact={integrated}
+          onChange={(next) => {
+            onPeriodChange("custom");
+            onRangeChange(next);
+          }}
+        />
+      </div>
     </section>
   );
 }

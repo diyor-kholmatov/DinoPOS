@@ -19,11 +19,13 @@ import type { CalendarDate, DateValue } from "@internationalized/date";
 import { useTranslation } from "react-i18next";
 import { useSessionStore } from "@/stores/session-store";
 import { LOCALES } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 interface DateRangeFieldProps {
   label: string;
   value: RangeValue<CalendarDate>;
   onChange: (value: RangeValue<CalendarDate>) => void;
+  compact?: boolean;
 }
 
 function formatCalendarDate(value: CalendarDate, locale: keyof typeof LOCALES): string {
@@ -95,7 +97,7 @@ function MonthGrid({
   );
 }
 
-export function DateRangeField({ label, value, onChange }: DateRangeFieldProps) {
+export function DateRangeField({ label, value, onChange, compact = false }: DateRangeFieldProps) {
   const { t } = useTranslation();
   const locale = useSessionStore((state) => state.locale);
   const [focusedValue, setFocusedValue] = useState<DateValue>(value.start);
@@ -106,8 +108,13 @@ export function DateRangeField({ label, value, onChange }: DateRangeFieldProps) 
 
   return (
     <DialogTrigger>
-      <Button aria-label={label} className="flex h-10 min-w-0 items-center gap-2 rounded-md border border-border bg-raised px-3 text-left text-sm font-semibold text-ink hover:border-border-strong">
-        <CalendarDays className="size-4 shrink-0 text-muted" aria-hidden="true" />
+      <Button aria-label={label} className={cn(
+        "flex min-w-0 items-center gap-2 rounded-md text-left text-ink",
+        compact
+          ? "h-8 border-0 bg-transparent px-3 text-xs font-medium hover:bg-raised"
+          : "h-10 border border-border bg-raised px-3 text-sm font-semibold hover:border-border-strong",
+      )}>
+        <CalendarDays className={cn("shrink-0 text-muted", compact ? "size-3.5" : "size-4")} aria-hidden="true" />
         <span className="truncate">{formatCalendarDate(value.start, locale)} – {formatCalendarDate(value.end, locale)}</span>
       </Button>
       <Popover placement="bottom end" className="z-50 w-[min(42rem,calc(100vw-1.5rem))] rounded-md border border-border bg-raised p-3 text-ink shadow-md">

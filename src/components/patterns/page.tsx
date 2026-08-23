@@ -97,14 +97,19 @@ export function SegmentedControl({
   value,
   options,
   onChange,
+  integrated = false,
 }: {
   label: string;
   value: string;
   options: Array<{ id: string; label: string }>;
   onChange: (value: string) => void;
+  integrated?: boolean;
 }) {
   return (
-    <div className="flex max-w-full gap-1 overflow-x-auto rounded-md bg-sunken p-1" role="group" aria-label={label}>
+    <div className={cn(
+      "flex max-w-full gap-1 overflow-x-auto",
+      integrated ? "h-8 rounded-sm bg-transparent p-0" : "rounded-md bg-sunken p-1",
+    )} role="group" aria-label={label}>
       {options.map((option) => (
         <button
           key={option.id}
@@ -112,8 +117,9 @@ export function SegmentedControl({
           aria-pressed={value === option.id}
           onClick={() => onChange(option.id)}
           className={cn(
-            "min-h-9 shrink-0 rounded-sm px-3 text-xs font-semibold text-muted hover:text-ink",
-            value === option.id && "bg-raised text-ink shadow-sm",
+            "shrink-0 rounded-sm px-3 text-xs font-medium text-muted hover:text-ink",
+            integrated ? "h-8 min-h-8" : "min-h-9",
+            value === option.id && (integrated ? "bg-raised font-semibold text-ink" : "bg-raised font-semibold text-ink shadow-sm"),
           )}
         >
           {option.label}

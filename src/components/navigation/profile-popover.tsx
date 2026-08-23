@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SelectField } from "@/components/ui/select-field";
+import { cn } from "@/lib/cn";
 import { useSessionStore } from "@/stores/session-store";
 
 interface ProfilePopoverProps {
   expanded: boolean;
+  compact?: boolean;
 }
 
-export function ProfilePopover({ expanded }: ProfilePopoverProps) {
+export function ProfilePopover({ expanded, compact = false }: ProfilePopoverProps) {
   const { t } = useTranslation();
   const locale = useSessionStore((state) => state.locale);
   const theme = useSessionStore((state) => state.theme);
@@ -22,19 +24,22 @@ export function ProfilePopover({ expanded }: ProfilePopoverProps) {
       <PopoverTrigger asChild>
         <Button
           variant="quiet"
-          className={expanded ? "w-full justify-start px-2" : "w-full px-0"}
+          className={cn(
+            expanded ? "w-full justify-start px-2" : "w-full px-0",
+            compact && "h-11 min-h-11 gap-2",
+          )}
           aria-label={t("profile.title")}
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-sunken text-xs font-bold text-ink">
+          <span className={cn("grid shrink-0 place-items-center rounded-full bg-sunken font-semibold text-ink", compact ? "size-8 text-[11px]" : "size-9 text-xs")}>
             LJ
           </span>
           {expanded ? (
             <span className="min-w-0 flex-1 text-left">
-              <strong className="block truncate text-sm">Liam Johnson</strong>
-              <small className="block text-xs font-medium text-muted">{t("app.owner")}</small>
+              <strong className={cn("block truncate", compact ? "text-xs font-semibold" : "text-sm")}>Liam Johnson</strong>
+              <small className={cn("block font-medium text-muted", compact ? "text-[10px]" : "text-xs")}>{t("app.owner")}</small>
             </span>
           ) : null}
-          {expanded ? <ChevronRight className="size-4 text-faint" aria-hidden="true" /> : null}
+          {expanded && !compact ? <ChevronRight className="size-4 text-faint" aria-hidden="true" /> : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="right" align="end" className="grid gap-2">

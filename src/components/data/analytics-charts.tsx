@@ -50,6 +50,9 @@ export function TimeSeriesChart({
   showLegend = true,
   showZoom = false,
   valueFormatter,
+  axisValueFormatter,
+  tooltipValueFormatter,
+  dashboardStyle = false,
   isLoading = false,
   errorMessage,
 }: {
@@ -60,6 +63,9 @@ export function TimeSeriesChart({
   showLegend?: boolean;
   showZoom?: boolean;
   valueFormatter?: (value: number) => string;
+  axisValueFormatter?: (value: number) => string;
+  tooltipValueFormatter?: (value: number) => string;
+  dashboardStyle?: boolean;
   isLoading?: boolean;
   errorMessage?: string;
 }) {
@@ -76,39 +82,69 @@ export function TimeSeriesChart({
         connectNulls: true,
         showSymbol: false,
         symbolSize: 8,
-        emphasis: { focus: "series" },
-        lineStyle: { width: 3, color },
+        symbol: "circle",
+        emphasis: dashboardStyle
+          ? { focus: "series", scale: true, itemStyle: { borderColor: tokens.raised, borderWidth: 3 } }
+          : { focus: "series" },
+        lineStyle: { width: dashboardStyle ? 2.25 : 3, color },
         itemStyle: { color },
         areaStyle: item.area ? { color, opacity: 0.12 } : undefined,
       };
     });
     return {
-      animationDuration: 180,
+      animationDuration: dashboardStyle ? 240 : 180,
       color: tokens.colors,
-      grid: { left: 8, right: valueFormatter ? 28 : 12, top: showLegend ? 42 : 16, bottom: showZoom ? 52 : 20, containLabel: true },
-      legend: showLegend ? { top: 4, left: 4, textStyle: { color: tokens.muted } } : { show: false },
+      grid: dashboardStyle
+        ? { left: 4, right: 18, top: showLegend ? 52 : 18, bottom: showZoom ? 52 : 18, containLabel: true }
+        : { left: 8, right: valueFormatter ? 28 : 12, top: showLegend ? 42 : 16, bottom: showZoom ? 52 : 20, containLabel: true },
+      legend: showLegend ? {
+        top: dashboardStyle ? 10 : 4,
+        left: 4,
+        icon: dashboardStyle ? "circle" : undefined,
+        itemWidth: dashboardStyle ? 8 : undefined,
+        itemHeight: dashboardStyle ? 8 : undefined,
+        itemGap: dashboardStyle ? 18 : undefined,
+        textStyle: { color: tokens.muted, fontSize: dashboardStyle ? 11 : undefined },
+      } : { show: false },
       tooltip: {
         trigger: "axis",
         backgroundColor: tokens.raised,
         borderColor: tokens.border,
-        textStyle: { color: tokens.ink },
-        axisPointer: { type: "line", lineStyle: { type: "dashed", color: tokens.muted } },
-        valueFormatter: valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
+        borderWidth: 1,
+        padding: dashboardStyle ? [10, 12] : undefined,
+        confine: true,
+        extraCssText: dashboardStyle ? "border-radius:6px;box-shadow:0 8px 24px rgb(20 20 16 / 0.12);" : undefined,
+        textStyle: { color: tokens.ink, fontSize: dashboardStyle ? 12 : undefined },
+        axisPointer: { type: "line", lineStyle: { type: "dashed", width: 1, color: tokens.muted } },
+        valueFormatter: tooltipValueFormatter
+          ? (value) => tooltipValueFormatter(Number(value))
+          : valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
       },
       xAxis: {
         type: "category",
         data: labels,
         boundaryGap: false,
-        axisLine: { lineStyle: { color: tokens.border } },
+        axisLine: dashboardStyle ? { show: false } : { lineStyle: { color: tokens.border } },
         axisTick: { show: false },
-        axisLabel: { color: tokens.muted, hideOverlap: valueFormatter ? true : undefined },
+        axisLabel: {
+          color: tokens.muted,
+          fontSize: dashboardStyle ? 11 : undefined,
+          margin: dashboardStyle ? 12 : undefined,
+          hideOverlap: valueFormatter || axisValueFormatter ? true : undefined,
+        },
       },
       yAxis: {
         type: "value",
-        splitLine: { lineStyle: { color: tokens.border } },
+        splitNumber: dashboardStyle ? 4 : undefined,
+        axisLine: dashboardStyle ? { show: false } : undefined,
+        axisTick: dashboardStyle ? { show: false } : undefined,
+        splitLine: { lineStyle: { color: tokens.border, opacity: dashboardStyle ? 0.72 : 1 } },
         axisLabel: {
           color: tokens.muted,
-          formatter: valueFormatter ? (value: number) => valueFormatter(value) : undefined,
+          fontSize: dashboardStyle ? 11 : undefined,
+          formatter: axisValueFormatter
+            ? (value: number) => axisValueFormatter(value)
+            : valueFormatter ? (value: number) => valueFormatter(value) : undefined,
         },
       },
       dataZoom: showZoom ? [{
@@ -127,7 +163,7 @@ export function TimeSeriesChart({
       }] : undefined,
       series: chartSeries,
     };
-  }, [labels, series, showLegend, showZoom, theme, valueFormatter]);
+  }, [axisValueFormatter, dashboardStyle, labels, series, showLegend, showZoom, theme, tooltipValueFormatter, valueFormatter]);
 
   const state = <ChartState height={height} ariaLabel={ariaLabel} isLoading={isLoading} errorMessage={errorMessage} isEmpty={!labels.length || !series.some((item) => item.values.length)} />;
   if (isLoading || errorMessage || !labels.length || !series.some((item) => item.values.length)) return state;

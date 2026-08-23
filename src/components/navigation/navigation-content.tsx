@@ -41,18 +41,22 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
 
   return (
     <>
-      <nav className="scrollbar-quiet min-h-0 flex-1 overflow-y-auto px-2 pb-3">
-        {renderGroup(t("nav.primary"), primaryNavigation)}
-        {renderGroup(t("nav.operations"), operationsNavigation)}
+      <nav className="scrollbar-quiet min-h-0 flex-1 overflow-y-auto px-2 pb-4">
+        <div className="grid gap-0.5">
+          {renderGroup(t("nav.primary"), primaryNavigation)}
+        </div>
+        <div className={pilot ? "mt-2 border-t border-border pt-2" : undefined}>
+          {renderGroup(t("nav.operations"), operationsNavigation)}
+        </div>
         {pilot ? (
-          <section className="grid gap-1">
+          <section className="mt-2 grid gap-1 border-t border-border pt-2">
             <button
               type="button"
               aria-expanded={moreOpen}
               aria-label={!expanded ? t("nav.more") : undefined}
               onClick={() => setMoreOpen((current) => !current)}
               className={cn(
-                "flex h-11 min-w-0 items-center gap-3 rounded-md px-3 text-[13px] font-semibold text-muted hover:bg-sunken hover:text-ink",
+                "flex h-10 min-w-0 items-center gap-3 rounded-md px-3 text-[13px] font-medium text-muted hover:bg-sunken hover:text-ink",
                 !expanded && "justify-center px-0",
               )}
             >
@@ -81,9 +85,10 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
           onNavigate={onNavigate}
           pilot={pilot}
         />
+        <div className={pilot ? "mt-1 border-t border-border pt-1" : undefined}>
         {expanded ? (
-          <div className="flex h-10 items-center gap-2 px-3 text-xs font-semibold text-muted">
-            <CircleCheck className="size-4 text-positive" aria-hidden="true" />
+          <div className={cn("flex items-center gap-2 px-3 text-muted", pilot ? "h-8 text-[11px] font-medium" : "h-10 text-xs font-semibold")}>
+            <CircleCheck className={cn("text-positive", pilot ? "size-3.5" : "size-4")} aria-hidden="true" />
             {t("app.systemReady")}
           </div>
         ) : (
@@ -94,7 +99,10 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
             </span>
           </Tooltip>
         )}
-        <ProfilePopover expanded={expanded} />
+        </div>
+        <div className={pilot ? "mt-1 border-t border-border pt-1" : undefined}>
+          <ProfilePopover expanded={expanded} compact={pilot} />
+        </div>
       </div>
     </>
   );

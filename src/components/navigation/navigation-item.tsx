@@ -19,10 +19,10 @@ export function NavigationItem({ item, label, expanded, onNavigate, pilot = fals
       onClick={onNavigate}
       aria-label={!expanded ? label : undefined}
       className={({ isActive }) => cn(
-        "relative flex min-w-0 items-center gap-3 rounded-md px-3 font-semibold text-muted transition-colors hover:bg-sunken hover:text-ink",
-        pilot ? "h-11 text-[13px]" : "h-12 text-sm",
+        "relative flex min-w-0 items-center gap-3 rounded-md px-3 text-muted transition-colors hover:bg-sunken hover:text-ink",
+        pilot ? "h-10 text-[13px] font-medium" : "h-12 text-sm font-semibold",
         isActive && (pilot
-          ? "bg-raised text-ink shadow-sm"
+          ? "bg-sunken text-ink before:absolute before:left-0 before:h-4 before:w-0.5 before:rounded-r-sm before:bg-action"
           : "bg-sunken text-ink before:absolute before:left-0 before:h-6 before:w-1 before:rounded-r-sm before:bg-ink"),
         !expanded && "justify-center px-0",
       )}
