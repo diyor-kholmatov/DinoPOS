@@ -11,6 +11,7 @@ import {
   seedEmployees,
   seedProducts,
   seedRegister,
+  seedSales,
   seedStores,
 } from "@/lib/legacy/seed";
 
@@ -81,7 +82,7 @@ function seedBootstrap(error: string | null = null): BootstrapState {
     fiscalization: true,
     online: true,
     fiscalPending: 0,
-    sales: [],
+    sales: seedSales,
   };
 }
 

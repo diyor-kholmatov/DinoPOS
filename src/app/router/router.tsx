@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { AppShell } from "@/app/layouts/app-shell";
 import { RouteErrorBoundary } from "@/app/layouts/route-error-boundary";
-import { PendingModulePage } from "@/features/platform/pending-module-page";
 
 const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";
 
@@ -35,22 +34,22 @@ export const router = createBrowserRouter([
           return { Component: module.CheckoutPage };
         },
       },
-      { path: "dashboard", element: <PendingModulePage /> },
-      { path: "catalog", element: <PendingModulePage /> },
-      { path: "catalog/import", element: <PendingModulePage /> },
-      { path: "inventory", element: <PendingModulePage /> },
-      { path: "inventory/transfers", element: <PendingModulePage /> },
-      { path: "customers", element: <PendingModulePage /> },
-      { path: "reports", element: <PendingModulePage /> },
-      { path: "sales", element: <PendingModulePage /> },
-      { path: "suppliers", element: <PendingModulePage /> },
-      { path: "returns", element: <PendingModulePage /> },
-      { path: "drafts", element: <PendingModulePage /> },
-      { path: "holds", element: <PendingModulePage /> },
-      { path: "shift", element: <PendingModulePage /> },
-      { path: "cash-operations", element: <PendingModulePage /> },
-      { path: "register-history", element: <PendingModulePage /> },
-      { path: "settings", element: <PendingModulePage /> },
+      { path: "dashboard", lazy: async () => ({ Component: (await import("@/features/dashboard/dashboard-page")).DashboardPage }) },
+      { path: "catalog", lazy: async () => ({ Component: (await import("@/features/catalog/catalog-page")).CatalogPage }) },
+      { path: "catalog/import", lazy: async () => ({ Component: (await import("@/features/catalog/import-page")).ImportPage }) },
+      { path: "inventory", lazy: async () => ({ Component: (await import("@/features/inventory/inventory-page")).InventoryPage }) },
+      { path: "inventory/transfers", lazy: async () => ({ Component: (await import("@/features/inventory/transfers-page")).TransfersPage }) },
+      { path: "customers", lazy: async () => ({ Component: (await import("@/features/customers/customers-page")).CustomersPage }) },
+      { path: "reports", lazy: async () => ({ Component: (await import("@/features/reports/reports-page")).ReportsPage }) },
+      { path: "sales", lazy: async () => ({ Component: (await import("@/features/sales/sales-page")).SalesPage }) },
+      { path: "suppliers", lazy: async () => ({ Component: (await import("@/features/suppliers/suppliers-page")).SuppliersPage }) },
+      { path: "returns", lazy: async () => ({ Component: (await import("@/features/returns/returns-page")).ReturnsPage }) },
+      { path: "drafts", lazy: async () => ({ Component: (await import("@/features/drafts/drafts-page")).DraftsPage }) },
+      { path: "holds", lazy: async () => ({ Component: (await import("@/features/holds/holds-page")).HoldsPage }) },
+      { path: "shift", lazy: async () => ({ Component: (await import("@/features/shifts/shift-page")).ShiftPage }) },
+      { path: "cash-operations", lazy: async () => ({ Component: (await import("@/features/shifts/cash-operations-page")).CashOperationsPage }) },
+      { path: "register-history", lazy: async () => ({ Component: (await import("@/features/shifts/register-history-page")).RegisterHistoryPage }) },
+      { path: "settings", lazy: async () => ({ Component: (await import("@/features/settings/settings-page")).SettingsPage }) },
       { path: "*", element: <Navigate to="/checkout" replace /> },
     ],
   },

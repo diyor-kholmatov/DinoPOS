@@ -9,7 +9,7 @@ export interface StockMovement {
   productId: string;
   productName: string;
   storeId: string;
-  type: "sale";
+  type: "sale" | "adjustment" | "transfer_out" | "transfer_in" | "return";
   quantity: number;
   actor: string;
   createdAt: string;
@@ -19,6 +19,18 @@ interface CatalogState {
   products: Product[];
   heldByProduct: Record<string, number>;
   stockMovements: StockMovement[];
+  addProduct: (product: Product) => void;
+  updateProduct: (product: Product) => void;
+  adjustStock: (productId: string, storeId: string, quantity: number, actor: string) => boolean;
+  transferStock: (
+    productId: string,
+    sourceStoreId: string,
+    destinationStoreId: string,
+    quantity: number,
+    actor: string,
+  ) => boolean;
+  reserveHeldStock: (lines: Array<{ productId: string; quantity: number }>) => void;
+  releaseHeldStock: (lines: Array<{ productId: string; quantity: number }>) => void;
   applySaleStock: (lines: CartLine[], storeId: string, actor: string, createdAt: string) => void;
 }
 
@@ -28,6 +40,92 @@ export const useCatalogStore = create<CatalogState>()(
       products: bootstrap.products,
       heldByProduct: bootstrap.heldByProduct,
       stockMovements: [],
+      addProduct: (product) => set((state) => ({ products: [product, ...state.products] })),
+      updateProduct: (product) => set((state) => ({
+        products: state.products.map((item) => item.id === product.id ? product : item),
+      })),
+      adjustStock: (productId, storeId, quantity, actor) => {
+        const product = useCatalogStore.getState().products.find((item) => item.id === productId);
+        if (!product || product.unit === "service") return false;
+        const nextStock = (product.stockByStore[storeId] ?? 0) + quantity;
+        if (nextStock < 0) return false;
+        const createdAt = new Date().toISOString();
+        set((state) => ({
+          products: state.products.map((item) => item.id === productId ? {
+            ...item,
+            active: nextStock > 0 || item.active,
+            stockByStore: { ...item.stockByStore, [storeId]: nextStock },
+          } : item),
+          stockMovements: [{
+            id: `SM-${crypto.randomUUID()}`,
+            productId,
+            productName: product.name,
+            storeId,
+            type: "adjustment",
+            quantity,
+            actor,
+            createdAt,
+          }, ...state.stockMovements],
+        }));
+        return true;
+      },
+      transferStock: (productId, sourceStoreId, destinationStoreId, quantity, actor) => {
+        const product = useCatalogStore.getState().products.find((item) => item.id === productId);
+        if (!product || product.unit === "service" || sourceStoreId === destinationStoreId || quantity < 1) {
+          return false;
+        }
+        const sourceStock = product.stockByStore[sourceStoreId] ?? 0;
+        if (sourceStock < quantity) return false;
+        const createdAt = new Date().toISOString();
+        set((state) => ({
+          products: state.products.map((item) => item.id === productId ? {
+            ...item,
+            stockByStore: {
+              ...item.stockByStore,
+              [sourceStoreId]: sourceStock - quantity,
+              [destinationStoreId]: (item.stockByStore[destinationStoreId] ?? 0) + quantity,
+            },
+          } : item),
+          stockMovements: [
+            {
+              id: `SM-${crypto.randomUUID()}`,
+              productId,
+              productName: product.name,
+              storeId: sourceStoreId,
+              type: "transfer_out",
+              quantity: -quantity,
+              actor,
+              createdAt,
+            },
+            {
+              id: `SM-${crypto.randomUUID()}`,
+              productId,
+              productName: product.name,
+              storeId: destinationStoreId,
+              type: "transfer_in",
+              quantity,
+              actor,
+              createdAt,
+            },
+            ...state.stockMovements,
+          ],
+        }));
+        return true;
+      },
+      reserveHeldStock: (lines) => set((state) => {
+        const heldByProduct = { ...state.heldByProduct };
+        for (const line of lines) {
+          heldByProduct[line.productId] = (heldByProduct[line.productId] ?? 0) + line.quantity;
+        }
+        return { heldByProduct };
+      }),
+      releaseHeldStock: (lines) => set((state) => {
+        const heldByProduct = { ...state.heldByProduct };
+        for (const line of lines) {
+          heldByProduct[line.productId] = Math.max(0, (heldByProduct[line.productId] ?? 0) - line.quantity);
+        }
+        return { heldByProduct };
+      }),
       applySaleStock: (lines, storeId, actor, createdAt) => {
         set((state) => {
           const soldByProduct = new Map(lines.map((line) => [line.productId, line.quantity]));
@@ -79,4 +177,3 @@ export function validateCartStock(lines: CartLine[], storeId: string): string | 
   }
   return null;
 }
-

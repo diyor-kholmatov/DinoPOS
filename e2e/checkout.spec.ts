@@ -5,6 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.clear());
   await page.goto("/checkout");
   await expect(page).toHaveURL(/\/checkout$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Checkout" })).toBeVisible();
 });
 
 async function openMobileCart(page: import("@playwright/test").Page) {

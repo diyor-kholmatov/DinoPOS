@@ -22,7 +22,13 @@ interface SessionState {
   mobileNavigationOpen: boolean;
   setSelectedStore: (storeId: string) => boolean;
   openShift: (cashierId: string, openingAmount: number) => void;
+  closeShift: () => typeof bootstrap.register | null;
+  adjustExpectedCash: (amount: number) => void;
   recordPayment: (total: number, paymentMethod: PaymentMethod, queueFiscal: boolean) => void;
+  setFiscalization: (enabled: boolean) => void;
+  setOnline: (online: boolean) => void;
+  setRegisterMode: (mode: "basic" | "full") => boolean;
+  addEmployee: (employee: Employee) => void;
   setLocale: (locale: LocaleCode) => void;
   toggleTheme: () => void;
   toggleNavigation: () => void;
@@ -70,6 +76,28 @@ export const useSessionStore = create<SessionState>()(
           },
         }));
       },
+      closeShift: () => {
+        const current = get().register;
+        if (!current.isOpen) return null;
+        set((state) => ({
+          register: {
+            ...state.register,
+            isOpen: false,
+            shiftId: "",
+            cashierId: "",
+            openingAmount: 0,
+            expectedCash: 0,
+            openedAt: "",
+          },
+        }));
+        return current;
+      },
+      adjustExpectedCash: (amount) => set((state) => ({
+        register: {
+          ...state.register,
+          expectedCash: Math.max(0, state.register.expectedCash + amount),
+        },
+      })),
       recordPayment: (total, paymentMethod, queueFiscal) => {
         set((state) => ({
           register: paymentMethod === "cash"
@@ -78,6 +106,14 @@ export const useSessionStore = create<SessionState>()(
           fiscalPending: state.fiscalPending + (queueFiscal ? 1 : 0),
         }));
       },
+      setFiscalization: (fiscalization) => set({ fiscalization }),
+      setOnline: (online) => set({ online }),
+      setRegisterMode: (registerMode) => {
+        if (get().register.isOpen) return false;
+        set({ registerMode });
+        return true;
+      },
+      addEmployee: (employee) => set((state) => ({ employees: [...state.employees, employee] })),
       setLocale: (locale) => set({ locale }),
       toggleTheme: () => set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
       toggleNavigation: () => set((state) => ({ navigationExpanded: !state.navigationExpanded })),
@@ -110,4 +146,3 @@ export function fiscalizationEnabled(): boolean {
   const state = useSessionStore.getState();
   return state.fiscalization && state.entitlements.fiscalization !== false;
 }
-

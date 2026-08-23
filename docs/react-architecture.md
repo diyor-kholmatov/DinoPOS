@@ -2,9 +2,9 @@
 
 ## Delivery Strategy
 
-The React application is the only published DinoPOS client. Checkout is the
-first production module; remaining routes stay inside the shared shell and show
-an explicit pending state until their business workflows are migrated.
+The React application is the only published DinoPOS client. Every operational
+route runs inside the shared shell and is lazy-loaded as an independent feature
+module.
 
 ## Project Structure
 
@@ -53,12 +53,12 @@ features own page composition; entities own schemas and pure domain behavior.
 
 | Store | Owns | Does not own |
 | --- | --- | --- |
-| `sessionStore` | current user, store, register, shift | products or sales |
 | `checkoutStore` | cart, customer, discount, payment, active draft | product master data |
 | `catalogStore` | product collection and catalog filters | checkout UI state |
 | `customerStore` | customers and transaction ledger | translated labels |
 | `operationsStore` | movements, holds, returns, transfers | component state |
-| `preferencesStore` | locale, theme, Rail, density, saved views | domain records |
+| `settingsStore` | company, payment, receipt, tax, and permission settings | operational records |
+| `sessionStore` | locale, theme, Rail, current user, store, register, and shift | products or sales |
 
 Cross-domain writes are executed by typed commands such as `completeSale`, not
 by components reaching into multiple stores independently.
@@ -82,6 +82,7 @@ corrupt, and already-migrated data.
 - React Router uses a browser router in development and production.
 - The production build copies the application shell to `404.html`, allowing
   GitHub Pages to serve direct route requests before React Router starts.
+- Generated compatibility pages redirect legacy `*.html` links to React routes.
 - `/` redirects to `/checkout`.
 
 ## Design-System Layers
@@ -94,7 +95,7 @@ corrupt, and already-migrated data.
 5. Product patterns compose primitives without inventing new visual rules.
 6. Storybook documents foundations, composition, and every operational state.
 
-## Checkout Release Boundaries
+## Checkout Workflow
 
 The pilot migrates the complete checkout workflow, not a visual shell:
 
@@ -107,9 +108,8 @@ The pilot migrates the complete checkout workflow, not a visual shell:
 - sale completion, stock/customer/cash side effects, receipt confirmation;
 - keyboard operation, mobile catalog/cart switching, and persisted restore.
 
-Non-checkout navigation routes display an explicit pending state. They are not
-silently reimplemented with incomplete logic or linked to removed prototype
-pages.
+The remaining feature modules use the same domain stores, table engine,
+localization boundary, tokens, navigation, and feedback components.
 
 ## Test Pyramid
 
@@ -123,8 +123,7 @@ pages.
 - The deployed `404.html` is verified alongside the production entry so direct
   GitHub Pages routes resolve to the same application.
 
-## Module Gate
+## Release Gate
 
-Each remaining module moves from pending to production only after its domain
-commands, persistence behavior, translations, responsive states, and automated
-tests are complete.
+A release passes only when TypeScript, Vitest, the production build, Storybook,
+and Playwright desktop/tablet/mobile checks all succeed.

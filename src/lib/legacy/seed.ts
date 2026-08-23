@@ -1,6 +1,7 @@
 import type { Customer } from "@/entities/customer/model";
 import type { Product } from "@/entities/product/model";
 import type { Register } from "@/entities/register/model";
+import type { Sale } from "@/entities/sale/model";
 import type { Employee } from "@/entities/shift/model";
 import type { Store } from "@/entities/store/model";
 
@@ -82,3 +83,44 @@ export const seedRegister: Register = {
   openedAt: "",
 };
 
+const saleDays = [0, 0, 1, 2, 3, 5, 6, 8, 12, 18, 24, 29];
+
+export const seedSales: Sale[] = saleDays.map((daysAgo, index) => {
+  const product = seedProducts[index % seedProducts.length]!;
+  const customer = seedCustomers[index % seedCustomers.length]!;
+  const cashier = seedEmployees[index % seedEmployees.length]!;
+  const quantity = product.unit === "service" ? 1 : (index % 3) + 1;
+  const subtotal = product.price * quantity;
+  const discount = index % 4 === 0 ? Math.round(subtotal * 0.05) : 0;
+  const tax = Math.round((subtotal - discount) * 0.12);
+  const createdAt = new Date();
+  createdAt.setDate(createdAt.getDate() - daysAgo);
+  createdAt.setHours(9 + (index % 9), 10 + index, 0, 0);
+
+  return {
+    id: `seed-sale-${index + 1}`,
+    receiptNumber: `R-${10482 + index}`,
+    createdAt: createdAt.toISOString(),
+    storeId: seedStores[index % seedStores.length]!.id,
+    registerId: "REG-01",
+    shiftId: `SH-${330 + index}`,
+    cashierName: cashier.name,
+    customerId: customer.id,
+    customerName: customer.name,
+    lines: [{
+      productId: product.id,
+      name: product.name,
+      unitPrice: product.price,
+      quantity,
+      lineDiscount: discount ? 5 : 0,
+    }],
+    subtotal,
+    discount,
+    tax,
+    total: subtotal - discount + tax,
+    paymentMethod: ["cash", "card", "qr", "transfer"][index % 4] as Sale["paymentMethod"],
+    fiscalized: true,
+    fiscalId: `FISC-${8200 + index}`,
+    status: "completed",
+  };
+});

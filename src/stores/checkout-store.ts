@@ -33,6 +33,9 @@ interface CheckoutState {
   setCategory: (category: string) => void;
   setMobileView: (mobileView: "products" | "cart") => void;
   saveDraft: (storeId: string) => boolean;
+  restoreDraft: (draftId: string) => boolean;
+  deleteDraft: (draftId: string) => void;
+  clearCart: () => void;
   clearAfterSale: () => void;
 }
 
@@ -106,6 +109,23 @@ export const useCheckoutStore = create<CheckoutState>()(
         });
         return true;
       },
+      restoreDraft: (draftId) => {
+        const draft = get().drafts.find((item) => item.id === draftId);
+        if (!draft) return false;
+        set((state) => ({
+          cart: draft.cart.map((line) => ({ ...line })),
+          selectedCustomerId: draft.customerId,
+          receiptDiscount: draft.receiptDiscount,
+          paymentMethod: draft.paymentMethod,
+          drafts: state.drafts.filter((item) => item.id !== draftId),
+          mobileView: "cart",
+        }));
+        return true;
+      },
+      deleteDraft: (draftId) => set((state) => ({
+        drafts: state.drafts.filter((item) => item.id !== draftId),
+      })),
+      clearCart: () => set({ cart: [], receiptDiscount: 0 }),
       clearAfterSale: () => set({ cart: [], receiptDiscount: 0 }),
     }),
     {
