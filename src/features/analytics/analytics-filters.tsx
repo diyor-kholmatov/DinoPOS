@@ -1,11 +1,12 @@
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import type { RangeValue } from "react-aria-components";
-import { Check, Store } from "lucide-react";
+import { Check, ChevronDown, Store } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { DateRangeField } from "@/components/ui/date-range-field";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/patterns/page";
+import { cn } from "@/lib/cn";
 import { useSessionStore } from "@/stores/session-store";
 
 export type AnalyticsPeriod = "yesterday" | "today" | "week" | "month" | "year" | "custom";
@@ -20,20 +21,16 @@ export function rangeForPeriod(period: AnalyticsPeriod): RangeValue<CalendarDate
   return { start: end.subtract({ days }), end };
 }
 
-export function AnalyticsFilters({
-  period,
-  onPeriodChange,
+export function StorePicker({
   selectedStores,
   onStoresChange,
-  range,
-  onRangeChange,
+  prominent = false,
+  className,
 }: {
-  period: AnalyticsPeriod;
-  onPeriodChange: (period: AnalyticsPeriod) => void;
   selectedStores: string[];
   onStoresChange: (stores: string[]) => void;
-  range: RangeValue<CalendarDate>;
-  onRangeChange: (range: RangeValue<CalendarDate>) => void;
+  prominent?: boolean;
+  className?: string;
 }) {
   const { t } = useTranslation();
   const stores = useSessionStore((state) => state.stores);
@@ -46,7 +43,70 @@ export function AnalyticsFilters({
   };
 
   return (
-    <section aria-label={t("dashboard.analyticsFilters")} className="mt-5 flex flex-wrap items-center gap-2">
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          size={prominent ? "default" : "small"}
+          variant={prominent ? "quiet" : "secondary"}
+          className={cn(
+            "gap-2",
+            prominent && "-ml-3 h-auto min-h-0 px-3 py-1 text-2xl font-bold",
+            className,
+          )}
+        >
+          {!prominent ? <Store className="size-4 text-muted" aria-hidden="true" /> : null}
+          {selectedStores.length === stores.length
+            ? t("dashboard.allStores")
+            : t("dashboard.storesSelected", { count: selectedStores.length })}
+          {prominent ? <ChevronDown className="size-5 text-faint" aria-hidden="true" /> : null}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-72 p-1">
+        {stores.map((store) => {
+          const checked = selectedStores.includes(store.id);
+          return (
+            <button
+              key={store.id}
+              type="button"
+              className="flex min-h-11 w-full items-center gap-3 rounded-sm px-3 text-left text-sm hover:bg-sunken"
+              aria-pressed={checked}
+              onClick={() => toggleStore(store.id)}
+            >
+              <span className="grid size-5 place-items-center rounded-sm border border-border">
+                {checked ? <Check className="size-3.5" aria-hidden="true" /> : null}
+              </span>
+              <span className="font-semibold">{store.name}</span>
+            </button>
+          );
+        })}
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function AnalyticsFilters({
+  period,
+  onPeriodChange,
+  selectedStores,
+  onStoresChange,
+  range,
+  onRangeChange,
+  showStore = true,
+  className,
+}: {
+  period: AnalyticsPeriod;
+  onPeriodChange: (period: AnalyticsPeriod) => void;
+  selectedStores: string[];
+  onStoresChange: (stores: string[]) => void;
+  range: RangeValue<CalendarDate>;
+  onRangeChange: (range: RangeValue<CalendarDate>) => void;
+  showStore?: boolean;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <section aria-label={t("dashboard.analyticsFilters")} className={cn("mt-5 flex flex-wrap items-center gap-2", className)}>
       <SegmentedControl
         label={t("dashboard.periodLabel")}
         value={period}
@@ -63,35 +123,7 @@ export function AnalyticsFilters({
           { id: "year", label: t("dashboard.periodYear") },
         ]}
       />
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button size="small" className="gap-2">
-            <Store className="size-4 text-muted" aria-hidden="true" />
-            {selectedStores.length === stores.length
-              ? t("dashboard.allStores")
-              : t("dashboard.storesSelected", { count: selectedStores.length })}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent align="start" className="w-72 p-1">
-          {stores.map((store) => {
-            const checked = selectedStores.includes(store.id);
-            return (
-              <button
-                key={store.id}
-                type="button"
-                className="flex min-h-11 w-full items-center gap-3 rounded-sm px-3 text-left text-sm hover:bg-sunken"
-                aria-pressed={checked}
-                onClick={() => toggleStore(store.id)}
-              >
-                <span className="grid size-5 place-items-center rounded-sm border border-border">
-                  {checked ? <Check className="size-3.5" aria-hidden="true" /> : null}
-                </span>
-                <span className="font-semibold">{store.name}</span>
-              </button>
-            );
-          })}
-        </PopoverContent>
-      </Popover>
+      {showStore ? <StorePicker selectedStores={selectedStores} onStoresChange={onStoresChange} /> : null}
       <DateRangeField
         label={t("dashboard.dateRange")}
         value={range}

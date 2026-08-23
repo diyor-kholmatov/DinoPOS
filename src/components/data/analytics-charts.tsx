@@ -6,7 +6,7 @@ import { useSessionStore } from "@/stores/session-store";
 
 interface SeriesInput {
   name: string;
-  values: number[];
+  values: Array<number | null>;
   colorIndex?: 1 | 2 | 3 | 4 | 5;
   area?: boolean;
 }
@@ -47,6 +47,9 @@ export function TimeSeriesChart({
   series,
   ariaLabel,
   height = 300,
+  showLegend = true,
+  showZoom = false,
+  valueFormatter,
   isLoading = false,
   errorMessage,
 }: {
@@ -54,6 +57,9 @@ export function TimeSeriesChart({
   series: SeriesInput[];
   ariaLabel: string;
   height?: number;
+  showLegend?: boolean;
+  showZoom?: boolean;
+  valueFormatter?: (value: number) => string;
   isLoading?: boolean;
   errorMessage?: string;
 }) {
@@ -67,6 +73,7 @@ export function TimeSeriesChart({
         type: "line",
         data: item.values,
         smooth: 0.28,
+        connectNulls: true,
         showSymbol: false,
         symbolSize: 8,
         emphasis: { focus: "series" },
@@ -78,14 +85,15 @@ export function TimeSeriesChart({
     return {
       animationDuration: 180,
       color: tokens.colors,
-      grid: { left: 8, right: 12, top: 42, bottom: 20, containLabel: true },
-      legend: { top: 4, left: 4, textStyle: { color: tokens.muted } },
+      grid: { left: 8, right: valueFormatter ? 28 : 12, top: showLegend ? 42 : 16, bottom: showZoom ? 52 : 20, containLabel: true },
+      legend: showLegend ? { top: 4, left: 4, textStyle: { color: tokens.muted } } : { show: false },
       tooltip: {
         trigger: "axis",
         backgroundColor: tokens.raised,
         borderColor: tokens.border,
         textStyle: { color: tokens.ink },
         axisPointer: { type: "line", lineStyle: { type: "dashed", color: tokens.muted } },
+        valueFormatter: valueFormatter ? (value) => valueFormatter(Number(value)) : undefined,
       },
       xAxis: {
         type: "category",
@@ -93,16 +101,33 @@ export function TimeSeriesChart({
         boundaryGap: false,
         axisLine: { lineStyle: { color: tokens.border } },
         axisTick: { show: false },
-        axisLabel: { color: tokens.muted },
+        axisLabel: { color: tokens.muted, hideOverlap: valueFormatter ? true : undefined },
       },
       yAxis: {
         type: "value",
         splitLine: { lineStyle: { color: tokens.border } },
-        axisLabel: { color: tokens.muted },
+        axisLabel: {
+          color: tokens.muted,
+          formatter: valueFormatter ? (value: number) => valueFormatter(value) : undefined,
+        },
       },
+      dataZoom: showZoom ? [{
+        type: "slider",
+        height: 18,
+        bottom: 4,
+        borderColor: "transparent",
+        backgroundColor: tokens.border,
+        fillerColor: `${tokens.colors[0]}22`,
+        dataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
+        selectedDataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
+        handleSize: 18,
+        handleStyle: { color: tokens.colors[0], borderColor: tokens.colors[0] },
+        moveHandleSize: 0,
+        showDetail: false,
+      }] : undefined,
       series: chartSeries,
     };
-  }, [labels, series, theme]);
+  }, [labels, series, showLegend, showZoom, theme, valueFormatter]);
 
   const state = <ChartState height={height} ariaLabel={ariaLabel} isLoading={isLoading} errorMessage={errorMessage} isEmpty={!labels.length || !series.some((item) => item.values.length)} />;
   if (isLoading || errorMessage || !labels.length || !series.some((item) => item.values.length)) return state;
