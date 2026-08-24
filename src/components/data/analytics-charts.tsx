@@ -72,6 +72,7 @@ export function TimeSeriesChart({
   const theme = useSessionStore((state) => state.theme);
   const option = useMemo<EChartsOption>(() => {
     const tokens = chartTokens();
+    const zoomStart = labels.length > 120 ? Math.max(0, 100 - (120 / labels.length) * 100) : 0;
     const chartSeries: LineSeriesOption[] = series.map((item, index) => {
       const color = tokens.colors[(item.colorIndex ?? ((index + 1) as 1 | 2 | 3 | 4 | 5)) - 1];
       return {
@@ -147,20 +148,31 @@ export function TimeSeriesChart({
             : valueFormatter ? (value: number) => valueFormatter(value) : undefined,
         },
       },
-      dataZoom: showZoom ? [{
-        type: "slider",
-        height: 18,
-        bottom: 4,
-        borderColor: "transparent",
-        backgroundColor: tokens.border,
-        fillerColor: `${tokens.colors[0]}22`,
-        dataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
-        selectedDataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
-        handleSize: 18,
-        handleStyle: { color: tokens.colors[0], borderColor: tokens.colors[0] },
-        moveHandleSize: 0,
-        showDetail: false,
-      }] : undefined,
+      dataZoom: showZoom ? [
+        {
+          type: "inside",
+          start: zoomStart,
+          end: 100,
+          zoomOnMouseWheel: true,
+          moveOnMouseMove: true,
+        },
+        {
+          type: "slider",
+          start: zoomStart,
+          end: 100,
+          height: 18,
+          bottom: 4,
+          borderColor: "transparent",
+          backgroundColor: tokens.border,
+          fillerColor: `${tokens.colors[0]}22`,
+          dataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
+          selectedDataBackground: { lineStyle: { opacity: 0 }, areaStyle: { opacity: 0 } },
+          handleSize: 18,
+          handleStyle: { color: tokens.colors[0], borderColor: tokens.colors[0] },
+          moveHandleSize: 0,
+          showDetail: false,
+        },
+      ] : undefined,
       series: chartSeries,
     };
   }, [axisValueFormatter, dashboardStyle, labels, series, showLegend, showZoom, theme, tooltipValueFormatter, valueFormatter]);

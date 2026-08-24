@@ -8,8 +8,14 @@ import {
   AnalyticsFilters,
   rangeForPeriod,
   StorePicker,
-  type AnalyticsPeriod,
 } from "@/features/analytics/analytics-filters";
+import {
+  buildDashboardAnalytics,
+  dashboardDefaultGranularity,
+  dashboardGranularityOptions,
+  type AnalyticsGranularity,
+  type AnalyticsPeriod,
+} from "@/features/analytics/dashboard-analytics";
 import { TimeSeriesChart } from "@/components/data/analytics-charts";
 import { PageLayout } from "@/components/patterns/page";
 import { Button } from "@/components/ui/button";
@@ -19,88 +25,6 @@ import { cn } from "@/lib/cn";
 import { useCatalogStore } from "@/stores/catalog-store";
 import { useSessionStore } from "@/stores/session-store";
 
-const DEMO_STORE_SERIES = {
-  b1: [48_200_000, 52_800_000, 50_400_000, 57_600_000, 54_100_000, 62_800_000, 58_600_000, 64_700_000, 69_200_000, 65_800_000, 72_400_000, 78_100_000],
-  b2: [33_400_000, 36_100_000, 39_800_000, 37_200_000, 41_900_000, 45_600_000, 43_100_000, 48_300_000, 46_700_000, 51_400_000, 54_200_000, 57_900_000],
-  b3: [19_600_000, 21_200_000, 20_100_000, 23_800_000, 25_400_000, 24_200_000, 27_100_000, 29_600_000, 28_300_000, 31_800_000, 33_200_000, 35_700_000],
-} as const;
-
-const STORE_TRENDS: Record<string, number> = { b1: 9.7, b2: 6.4, b3: 4.8 };
-
-type Granularity = "hour" | "day" | "week" | "month";
-
-function toUtcDate(value: CalendarDate): Date {
-  return new Date(Date.UTC(value.year, value.month - 1, value.day));
-}
-
-function daysBetween(range: RangeValue<CalendarDate>): number {
-  return Math.max(1, Math.round((toUtcDate(range.end).getTime() - toUtcDate(range.start).getTime()) / 86_400_000) + 1);
-}
-
-function granularityForRange(range: RangeValue<CalendarDate>): Granularity {
-  const days = daysBetween(range);
-  if (days <= 2) return "hour";
-  if (days <= 14) return "day";
-  if (days <= 90) return "week";
-  return "month";
-}
-
-function granularityOptions(period: AnalyticsPeriod, range: RangeValue<CalendarDate>): Granularity[] {
-  if (period === "today" || period === "yesterday") return ["hour"];
-  if (period === "week") return ["day"];
-  if (period === "month") return ["day", "week"];
-  if (period === "year") return ["month"];
-  const days = daysBetween(range);
-  if (days <= 2) return ["hour"];
-  if (days <= 14) return ["day"];
-  if (days <= 90) return ["day", "week"];
-  return ["month"];
-}
-
-function buildChartLabels(
-  range: RangeValue<CalendarDate>,
-  granularity: Granularity,
-  locale: keyof typeof LOCALES,
-): string[] {
-  const formatterLocale = LOCALES[locale];
-  const start = toUtcDate(range.start);
-  const end = toUtcDate(range.end);
-
-  if (granularity === "hour") {
-    return ["09:00", "11:00", "13:00", "15:00", "17:00", "19:00", "21:00", "23:00"];
-  }
-
-  if (granularity === "month") {
-    const monthDistance = (end.getUTCFullYear() - start.getUTCFullYear()) * 12
-      + end.getUTCMonth() - start.getUTCMonth();
-    const count = Math.min(12, Math.max(2, monthDistance));
-    return Array.from({ length: count }, (_, index) => {
-      const date = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth() - count + index + 1, 1));
-      return new Intl.DateTimeFormat(formatterLocale, { month: "short" }).format(date);
-    });
-  }
-
-  const totalDays = daysBetween(range);
-  const preferredStep = granularity === "week" ? 7 : 1;
-  const naturalCount = Math.ceil(totalDays / preferredStep);
-  const count = Math.min(granularity === "week" ? 14 : 31, Math.max(2, naturalCount));
-  return Array.from({ length: count }, (_, index) => {
-    const progress = count === 1 ? 0 : index / (count - 1);
-    const date = new Date(start.getTime() + (end.getTime() - start.getTime()) * progress);
-    return new Intl.DateTimeFormat(formatterLocale, { day: "numeric", month: "short" }).format(date);
-  });
-}
-
-function buildSeriesValues(base: readonly number[], count: number, granularity: Granularity): number[] {
-  if (granularity === "month" && count === 12) return [...base];
-  const scale = granularity === "hour" ? 0.006 : granularity === "day" ? 0.045 : granularity === "week" ? 0.22 : 1;
-  return Array.from({ length: count }, (_, index) => {
-    const sourceIndex = Math.round((index / Math.max(1, count - 1)) * (base.length - 1));
-    const variation = 0.94 + ((index * 7 + count) % 5) * 0.025;
-    return Math.round(((base[sourceIndex] ?? base[0] ?? 0) * scale * variation) / 10_000) * 10_000;
-  });
-}
-
 export function DashboardPage() {
   const { t } = useTranslation();
   const locale = useSessionStore((state) => state.locale);
@@ -109,31 +33,27 @@ export function DashboardPage() {
   const [period, setPeriod] = useState<AnalyticsPeriod>("year");
   const [range, setRange] = useState(rangeForPeriod("year"));
   const [selectedStores, setSelectedStores] = useState(stores.map((store) => store.id));
-  const [granularity, setGranularity] = useState<Granularity>("month");
-
-  const labels = useMemo(
-    () => buildChartLabels(range, granularity, locale),
-    [granularity, locale, range],
+  const [granularity, setGranularity] = useState<AnalyticsGranularity>("month");
+  const visibleStores = useMemo(
+    () => stores.filter((store) => selectedStores.includes(store.id)),
+    [selectedStores, stores],
   );
-  const visibleStores = stores.filter((store) => selectedStores.includes(store.id));
-  const series = visibleStores.flatMap((store, index) => {
-    const values = DEMO_STORE_SERIES[store.id as keyof typeof DEMO_STORE_SERIES];
-    return values ? [{
-      name: store.name,
-      values: buildSeriesValues(values, labels.length, granularity),
-      colorIndex: ((index % 5) + 1) as 1 | 2 | 3 | 4 | 5,
-    }] : [];
-  });
-  const revenue = series.reduce(
-    (total, storeSeries) => total + storeSeries.values.reduce((sum, value) => sum + value, 0),
-    0,
+  const analytics = useMemo(
+    () => buildDashboardAnalytics(
+      range,
+      granularity,
+      visibleStores.map((store, index) => ({
+        id: store.id,
+        name: store.name,
+        colorIndex: ((index % 5) + 1) as 1 | 2 | 3 | 4 | 5,
+      })),
+      LOCALES[locale],
+    ),
+    [granularity, locale, range, visibleStores],
   );
-  const previousRevenue = visibleStores.reduce((total, store) => {
-    const storeSeries = series.find((item) => item.name === store.name);
-    const current = storeSeries?.values.reduce((sum, value) => sum + value, 0) ?? 0;
-    return total + current / (1 + (STORE_TRENDS[store.id] ?? 0) / 100);
-  }, 0);
-  const comparison = previousRevenue ? ((revenue / previousRevenue) - 1) * 100 : 0;
+  const revenue = analytics.total;
+  const previousRevenue = analytics.previousTotal;
+  const comparison = analytics.comparison;
   const orders = Math.max(1, Math.round(revenue / 358_200));
   const average = revenue / orders;
   const profit = Math.round(revenue * 0.429);
@@ -142,24 +62,30 @@ export function DashboardPage() {
     const minimum = Math.min(...selectedStores.map((storeId) => product.stockByStore[storeId] ?? 0));
     return minimum <= 3 ? [{ product, minimum }] : [];
   }).sort((a, b) => a.minimum - b.minimum).slice(0, 3);
-  const granularityLabelKeys: Record<Granularity, string> = {
-    hour: "dashboard.groupHour",
-    day: "dashboard.groupDay",
-    week: "dashboard.groupWeek",
-    month: "dashboard.groupMonth",
+  const granularityLabelKeys: Record<AnalyticsGranularity, string> = {
+    hour: "dashboard.detailHour",
+    day: "dashboard.detailDay",
+    week: "dashboard.detailWeek",
+    month: "dashboard.detailMonth",
   };
-  const detailOptions = granularityOptions(period, range).map((value) => ({
+  const detailOptions = dashboardGranularityOptions(period, range).map((value) => ({
     id: value,
     label: t(granularityLabelKeys[value]),
   }));
 
   const handlePeriodChange = (next: AnalyticsPeriod) => {
     setPeriod(next);
+    if (next !== "custom") {
+      setGranularity(dashboardDefaultGranularity(next, rangeForPeriod(next)));
+    }
   };
 
   const handleRangeChange = (next: RangeValue<CalendarDate>) => {
     setRange(next);
-    setGranularity(granularityForRange(next));
+    setGranularity((current) => {
+      const options = dashboardGranularityOptions("custom", next);
+      return options.includes(current) ? current : dashboardDefaultGranularity("custom", next);
+    });
   };
 
   return (
@@ -202,19 +128,20 @@ export function DashboardPage() {
               <SelectField
                 label={t("dashboard.groupBy")}
                 value={granularity}
-                onChange={(value) => setGranularity(value as Granularity)}
+                onChange={(value) => setGranularity(value as AnalyticsGranularity)}
                 options={detailOptions}
                 hideLabel
                 size="compact"
-                className="w-36"
+                className="w-64 [&>button]:h-10"
               />
             </div>
             <TimeSeriesChart
-              labels={labels}
-              series={series}
+              labels={analytics.labels}
+              series={analytics.series}
               ariaLabel={t("dashboard.salesChartLabel")}
               height={258}
               showLegend
+              showZoom={analytics.labels.length > 36}
               dashboardStyle
               axisValueFormatter={(value) => `${Math.round(value / 1_000_000)}M`}
               tooltipValueFormatter={(value) => formatMoney(value, locale)}
@@ -223,7 +150,7 @@ export function DashboardPage() {
 
           <aside className="bg-panel/55 p-5">
             <h2 className="text-[13px] font-semibold text-ink">{t("dashboard.periodSummary")}</h2>
-            <dl className="mt-4 grid gap-4">
+            <dl className="mt-3 grid sm:grid-cols-2 sm:gap-x-6 xl:grid-cols-1 xl:gap-x-0">
               {[
                 [t("dashboard.previousPeriod"), formatMoney(previousRevenue, locale)],
                 [t("dashboard.periodOrders"), String(orders)],
@@ -232,9 +159,9 @@ export function DashboardPage() {
                 [t("dashboard.profitMargin"), `${((profit / Math.max(1, revenue)) * 100).toFixed(1)}%`],
                 [t("dashboard.selectedStores"), String(selectedStores.length)],
               ].map(([label, value]) => (
-                <div key={label} className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-2 border-b border-border/70 pb-3 last:border-0 last:pb-0">
-                  <dt className="whitespace-nowrap text-xs text-muted">{label}</dt>
-                  <dd className="whitespace-nowrap text-[13px] font-semibold text-ink tabular-nums">{value}</dd>
+                <div key={label} className="grid min-h-11 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-border/70 py-2 last:border-0">
+                  <dt className="min-w-0 text-xs leading-4 text-muted">{label}</dt>
+                  <dd className="whitespace-nowrap text-right text-[13px] font-semibold text-ink tabular-nums">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -284,13 +211,13 @@ export function DashboardPage() {
               </thead>
               <tbody className="divide-y divide-border">
                 {visibleStores.map((store) => {
-                  const storeSeries = series.find((item) => item.name === store.name);
-                  const storeRevenue = storeSeries?.values.reduce((sum, value) => sum + value, 0) ?? 0;
+                  const storeRevenue = analytics.totalsByStore[store.id] ?? 0;
+                  const storeComparison = analytics.comparisonsByStore[store.id] ?? 0;
                   return (
                     <tr key={store.id} className="h-12">
                       <td className="font-medium text-ink">{store.name}</td>
                       <td className="text-right text-ink tabular-nums">{formatMoney(storeRevenue, locale)}</td>
-                      <td className="text-right font-medium text-positive tabular-nums">+{STORE_TRENDS[store.id] ?? 0}%</td>
+                      <td className="text-right font-medium text-positive tabular-nums">+{storeComparison.toFixed(1)}%</td>
                     </tr>
                   );
                 })}

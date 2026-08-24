@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/patterns/page";
 import { cn } from "@/lib/cn";
 import { useSessionStore } from "@/stores/session-store";
+import type { AnalyticsPeriod } from "@/features/analytics/dashboard-analytics";
 
-export type AnalyticsPeriod = "yesterday" | "today" | "week" | "month" | "year" | "custom";
+export type { AnalyticsPeriod } from "@/features/analytics/dashboard-analytics";
 
 export function rangeForPeriod(period: AnalyticsPeriod): RangeValue<CalendarDate> {
   const end = today(getLocalTimeZone());
