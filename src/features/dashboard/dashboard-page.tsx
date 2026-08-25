@@ -18,6 +18,12 @@ import {
 } from "@/features/analytics/dashboard-analytics";
 import { TimeSeriesChart } from "@/components/data/analytics-charts";
 import { PageLayout } from "@/components/patterns/page";
+import {
+  PageContextHeader,
+  SummaryList,
+  WorkspaceRegion,
+  WorkspaceSurface,
+} from "@/components/patterns/workspace";
 import { Button } from "@/components/ui/button";
 import { SelectField } from "@/components/ui/select-field";
 import { LOCALES, formatMoney } from "@/lib/format";
@@ -89,17 +95,21 @@ export function DashboardPage() {
   };
 
   return (
-    <PageLayout className="mx-auto w-full max-w-[100rem] p-6 pb-8">
-      <header className="flex min-h-10 items-center justify-between gap-4">
-        <StorePicker
-          selectedStores={selectedStores}
-          onStoresChange={setSelectedStores}
-          prominent
-        />
-        <Button asChild variant="primary" size="small" className="h-10 min-h-10 px-3 text-xs">
-          <Link to="/checkout"><ShoppingCart className="size-[15px]" aria-hidden="true" />{t("dashboard.newSale")}</Link>
-        </Button>
-      </header>
+    <PageLayout className="p-6 pb-8">
+      <PageContextHeader
+        context={(
+          <StorePicker
+            selectedStores={selectedStores}
+            onStoresChange={setSelectedStores}
+            prominent
+          />
+        )}
+        actions={(
+          <Button asChild variant="primary" size="small" className="h-10 min-h-10 px-3 text-xs">
+            <Link to="/checkout"><ShoppingCart className="size-[15px]" aria-hidden="true" />{t("dashboard.newSale")}</Link>
+          </Button>
+        )}
+      />
 
       <AnalyticsFilters
         period={period}
@@ -113,9 +123,9 @@ export function DashboardPage() {
         className="mt-3"
       />
 
-      <section className="mt-4 overflow-hidden rounded-lg border border-border bg-raised shadow-[var(--shadow-sm)]">
-        <div className="grid xl:grid-cols-[minmax(0,1fr)_17rem]">
-          <div className="min-w-0 p-5 pb-3 xl:border-r xl:border-border">
+      <WorkspaceSurface className="mt-4" elevated>
+        <div className="grid xl:grid-cols-[minmax(0,1fr)_var(--component-analytics-workspace-summary-width)]">
+          <WorkspaceRegion className="pb-3 xl:border-r xl:border-border">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
                 <h2 className="text-[15px] font-semibold leading-5 text-ink">{t("dashboard.salesPerformance")}</h2>
@@ -139,38 +149,31 @@ export function DashboardPage() {
               labels={analytics.labels}
               series={analytics.series}
               ariaLabel={t("dashboard.salesChartLabel")}
-              height={258}
+              height="clamp(var(--component-analytics-workspace-chart-min-height), 28vh, var(--component-analytics-workspace-chart-max-height))"
               showLegend
               showZoom={analytics.labels.length > 36}
               dashboardStyle
               axisValueFormatter={(value) => `${Math.round(value / 1_000_000)}M`}
               tooltipValueFormatter={(value) => formatMoney(value, locale)}
             />
-          </div>
+          </WorkspaceRegion>
 
-          <aside className="bg-panel/55 p-5">
-            <h2 className="text-[13px] font-semibold text-ink">{t("dashboard.periodSummary")}</h2>
-            <dl className="mt-3 grid sm:grid-cols-2 sm:gap-x-6 xl:grid-cols-1 xl:gap-x-0">
-              {[
+          <SummaryList
+            title={t("dashboard.periodSummary")}
+            items={[
                 [t("dashboard.previousPeriod"), formatMoney(previousRevenue, locale)],
                 [t("dashboard.periodOrders"), String(orders)],
                 [t("dashboard.periodAverage"), formatMoney(average, locale)],
                 [t("dashboard.periodProfit"), formatMoney(profit, locale)],
                 [t("dashboard.profitMargin"), `${((profit / Math.max(1, revenue)) * 100).toFixed(1)}%`],
                 [t("dashboard.selectedStores"), String(selectedStores.length)],
-              ].map(([label, value]) => (
-                <div key={label} className="grid min-h-11 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-border/70 py-2 last:border-0">
-                  <dt className="min-w-0 text-xs leading-4 text-muted">{label}</dt>
-                  <dd className="whitespace-nowrap text-right text-[13px] font-semibold text-ink tabular-nums">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </aside>
+              ].map(([label, value]) => ({ label, value }))}
+          />
         </div>
-      </section>
+      </WorkspaceSurface>
 
-      <section className="mt-5 grid overflow-hidden rounded-lg border border-border bg-raised lg:grid-cols-[minmax(0,1.08fr)_minmax(28rem,0.92fr)]">
-        <div className="p-4">
+      <WorkspaceSurface className="mt-[var(--component-workspace-section-gap)] grid lg:grid-cols-[minmax(0,1.08fr)_minmax(28rem,0.92fr)]">
+        <WorkspaceRegion className="p-4">
           <div className="flex items-center justify-between gap-4">
             <div>
               <h2 className="text-sm font-semibold text-ink">{t("dashboard.operationalExceptions")}</h2>
@@ -195,9 +198,9 @@ export function DashboardPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </WorkspaceRegion>
 
-        <div className="border-t border-border p-4 lg:border-l lg:border-t-0">
+        <WorkspaceRegion className="border-t border-border p-4 lg:border-l lg:border-t-0">
           <h2 className="text-sm font-semibold text-ink">{t("dashboard.storePerformance")}</h2>
           <p className="mt-0.5 text-xs text-muted">{t("dashboard.storePerformanceHelp")}</p>
           <div className="mt-2 overflow-x-auto">
@@ -224,8 +227,8 @@ export function DashboardPage() {
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
+        </WorkspaceRegion>
+      </WorkspaceSurface>
     </PageLayout>
   );
 }

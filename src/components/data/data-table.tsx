@@ -7,9 +7,10 @@ import {
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { ErrorState, FeedbackState, LoadingState } from "@/components/patterns/feedback-state";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
@@ -23,6 +24,7 @@ interface DataTableProps<TData> {
   isLoading?: boolean;
   errorMessage?: string | null;
   onRetry?: () => void;
+  toolbar?: ReactNode;
 }
 
 export function DataTable<TData>({
@@ -35,6 +37,7 @@ export function DataTable<TData>({
   isLoading = false,
   errorMessage = null,
   onRetry,
+  toolbar,
 }: DataTableProps<TData>) {
   const { t } = useTranslation();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -51,6 +54,7 @@ export function DataTable<TData>({
 
   return (
     <div className="overflow-hidden rounded-md border border-border bg-raised">
+      {toolbar ? <div className="border-b border-border">{toolbar}</div> : null}
       <div className="overflow-x-auto">
         <table className="w-full min-w-176 border-collapse text-left text-sm">
           <caption className="sr-only">{caption}</caption>
@@ -88,18 +92,18 @@ export function DataTable<TData>({
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={columns.length} className="h-32 px-4 text-center text-muted">
-                  <span className="inline-flex items-center gap-2" role="status">
-                    <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-                    {t("common.loading")}
-                  </span>
+                <td colSpan={columns.length} className="p-0">
+                  <LoadingState label={t("common.loading")} className="min-h-32" />
                 </td>
               </tr>
             ) : errorMessage ? (
               <tr>
-                <td colSpan={columns.length} className="h-32 px-4 text-center">
-                  <p className="font-semibold text-danger">{errorMessage}</p>
-                  {onRetry ? <Button className="mt-3" size="small" onClick={onRetry}>{t("common.tryAgain")}</Button> : null}
+                <td colSpan={columns.length} className="p-0">
+                  <ErrorState
+                    title={errorMessage}
+                    action={onRetry ? <Button size="small" onClick={onRetry}>{t("common.tryAgain")}</Button> : null}
+                    className="min-h-32"
+                  />
                 </td>
               </tr>
             ) : table.getRowModel().rows.length ? table.getRowModel().rows.map((row) => (
@@ -115,7 +119,9 @@ export function DataTable<TData>({
               </tr>
             )) : (
               <tr>
-                <td colSpan={columns.length} className="h-32 px-4 text-center text-muted">{emptyMessage}</td>
+                <td colSpan={columns.length} className="p-0">
+                  <FeedbackState title={emptyMessage} className="min-h-32" />
+                </td>
               </tr>
             )}
           </tbody>

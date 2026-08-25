@@ -15,15 +15,15 @@ import { cn } from "@/lib/cn";
 interface NavigationContentProps {
   expanded: boolean;
   onNavigate?: () => void;
-  pilot?: boolean;
+  compact?: boolean;
 }
 
-export function NavigationContent({ expanded, onNavigate, pilot = false }: NavigationContentProps) {
+export function NavigationContent({ expanded, onNavigate, compact = false }: NavigationContentProps) {
   const { t } = useTranslation();
   const [moreOpen, setMoreOpen] = useState(false);
   const renderGroup = (label: string, items: typeof primaryNavigation) => (
     <section className="grid gap-1">
-      {expanded && !pilot ? (
+      {expanded && !compact ? (
         <h2 className="px-3 pb-1 pt-3 text-xs font-bold uppercase text-faint">{label}</h2>
       ) : null}
       {items.map((item) => (
@@ -33,7 +33,7 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
           label={t(item.labelKey)}
           expanded={expanded}
           onNavigate={onNavigate}
-          pilot={pilot}
+          compact={compact}
         />
       ))}
     </section>
@@ -45,10 +45,10 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
         <div className="grid gap-0.5">
           {renderGroup(t("nav.primary"), primaryNavigation)}
         </div>
-        <div className={pilot ? "mt-2 border-t border-border pt-2" : undefined}>
+        <div className={compact ? "mt-2 border-t border-border pt-2" : undefined}>
           {renderGroup(t("nav.operations"), operationsNavigation)}
         </div>
-        {pilot ? (
+        {compact ? (
           <section className="mt-2 grid gap-1 border-t border-border pt-2">
             <button
               type="button"
@@ -56,7 +56,7 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
               aria-label={!expanded ? t("nav.more") : undefined}
               onClick={() => setMoreOpen((current) => !current)}
               className={cn(
-                "flex h-10 min-w-0 items-center gap-3 rounded-md px-3 text-[13px] font-medium text-muted hover:bg-sunken hover:text-ink",
+                "flex h-[var(--component-navigation-rail-item-height)] min-w-0 items-center gap-3 rounded-md px-3 text-[13px] font-medium text-muted hover:bg-sunken hover:text-ink",
                 !expanded && "justify-center px-0",
               )}
             >
@@ -71,7 +71,7 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
                 label={t(item.labelKey)}
                 expanded={expanded}
                 onNavigate={onNavigate}
-                pilot
+                compact
               />
             )) : null}
           </section>
@@ -83,12 +83,12 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
           label={t(settingsNavigation.labelKey)}
           expanded={expanded}
           onNavigate={onNavigate}
-          pilot={pilot}
+          compact={compact}
         />
-        <div className={pilot ? "mt-1 border-t border-border pt-1" : undefined}>
+        <div className={compact ? "mt-1 border-t border-border pt-1" : undefined}>
         {expanded ? (
-          <div className={cn("flex items-center gap-2 px-3 text-muted", pilot ? "h-8 text-[11px] font-medium" : "h-10 text-xs font-semibold")}>
-            <CircleCheck className={cn("text-positive", pilot ? "size-3.5" : "size-4")} aria-hidden="true" />
+          <div className={cn("flex items-center gap-2 px-3 text-muted", compact ? "h-8 text-[11px] font-medium" : "h-10 text-xs font-semibold")}>
+            <CircleCheck className={cn("text-positive", compact ? "size-3.5" : "size-4")} aria-hidden="true" />
             {t("app.systemReady")}
           </div>
         ) : (
@@ -100,8 +100,8 @@ export function NavigationContent({ expanded, onNavigate, pilot = false }: Navig
           </Tooltip>
         )}
         </div>
-        <div className={pilot ? "mt-1 border-t border-border pt-1" : undefined}>
-          <ProfilePopover expanded={expanded} compact={pilot} />
+        <div className={compact ? "mt-1 border-t border-border pt-1" : undefined}>
+          <ProfilePopover expanded={expanded} compact={compact} />
         </div>
       </div>
     </>

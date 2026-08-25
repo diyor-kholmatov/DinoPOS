@@ -5,8 +5,8 @@ const semanticTokens = [
   ["Positive", "--color-status-positive"],
   ["Warning", "--color-status-warning"],
   ["Danger", "--color-status-danger"],
-  ["Data 1", "--color-chart-data-1"],
-  ["Data 2", "--color-chart-data-2"],
+  ["Data 1", "--color-data-1"],
+  ["Data 2", "--color-data-2"],
 ] as const;
 
 function Foundations() {

@@ -45,4 +45,12 @@ describe("legacy migration", () => {
     loadBootstrap(storage);
     expect(storage.getItem(LEGACY_BACKUP_KEY)).toBe(JSON.stringify(legacy));
   });
+
+  it("starts new sessions in the approved light shell", () => {
+    const storage = window.localStorage;
+    storage.clear();
+    const state = loadBootstrap(storage);
+    expect(state.theme).toBe("light");
+    expect(state.navigationExpanded).toBe(true);
+  });
 });

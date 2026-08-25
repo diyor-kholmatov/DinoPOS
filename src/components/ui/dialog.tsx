@@ -16,7 +16,7 @@ export function DialogContent({
 }: ComponentProps<typeof DialogPrimitive.Content> & { closeLabel?: string }) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-[var(--color-surface-overlay)]" />
       <DialogPrimitive.Content
         className={cn(
           "dialog-panel fixed left-1/2 top-1/2 z-50 max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg border border-border bg-raised p-5 text-ink shadow-md",
@@ -42,6 +42,10 @@ export function DialogContent({
 
 export function DialogHeader({ children }: { children: ReactNode }) {
   return <div className="mb-5 pr-10">{children}</div>;
+}
+
+export function DialogFooter({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn("mt-5 flex flex-wrap items-center justify-end gap-2", className)}>{children}</div>;
 }
 
 export function DialogTitle(props: ComponentProps<typeof DialogPrimitive.Title>) {

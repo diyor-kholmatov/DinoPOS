@@ -78,7 +78,7 @@ function seedBootstrap(error: string | null = null): BootstrapState {
     paymentMethod: "cash",
     locale: "en",
     theme: "light",
-    navigationExpanded: false,
+    navigationExpanded: true,
     fiscalization: true,
     online: true,
     fiscalPending: 0,

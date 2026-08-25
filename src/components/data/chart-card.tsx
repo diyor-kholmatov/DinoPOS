@@ -1,5 +1,6 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
+import { WorkspaceSurface } from "@/components/patterns/workspace";
 
 interface ChartCardProps {
   title: string;
@@ -10,9 +11,9 @@ interface ChartCardProps {
 
 export function ChartCard({ title, value, labels, values }: ChartCardProps) {
   const styles = getComputedStyle(document.documentElement);
-  const dataColor = styles.getPropertyValue("--color-chart-data-1").trim() || "#4F6F9E";
-  const borderColor = styles.getPropertyValue("--color-border-default").trim() || "#E5E2DA";
-  const mutedColor = styles.getPropertyValue("--color-text-muted").trim() || "#77736C";
+  const dataColor = styles.getPropertyValue("--color-data-1").trim() || "currentColor";
+  const borderColor = styles.getPropertyValue("--color-border-default").trim() || "transparent";
+  const mutedColor = styles.getPropertyValue("--color-text-muted").trim() || "currentColor";
   const option: EChartsOption = {
     animationDuration: 180,
     grid: { left: 8, right: 8, top: 16, bottom: 22, containLabel: true },
@@ -41,12 +42,12 @@ export function ChartCard({ title, value, labels, values }: ChartCardProps) {
   };
 
   return (
-    <section className="w-full max-w-3xl rounded-md border border-border bg-raised p-4">
+    <WorkspaceSurface className="w-full p-4">
       <div className="flex items-end justify-between gap-4">
         <h2 className="text-base font-bold text-ink">{title}</h2>
         <strong className="text-xl text-ink tabular-nums">{value}</strong>
       </div>
       <ReactECharts option={option} style={{ height: 260 }} notMerge lazyUpdate />
-    </section>
+    </WorkspaceSurface>
   );
 }

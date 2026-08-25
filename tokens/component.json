@@ -1,9 +1,9 @@
 {
   "component": {
     "navigationRail": {
-      "compactWidth": { "value": "72px" },
-      "expandedWidth": { "value": "232px" },
-      "itemHeight": { "value": "48px" }
+      "compactWidth": { "value": "64px" },
+      "expandedWidth": { "value": "176px" },
+      "itemHeight": { "value": "40px" }
     },
     "control": {
       "height": { "value": "44px" },
@@ -13,7 +13,16 @@
       "desktopPadding": { "value": "24px" },
       "tabletPadding": { "value": "20px" },
       "mobilePadding": { "value": "16px" }
+    },
+    "workspace": {
+      "padding": { "value": "{space.5}" },
+      "sectionGap": { "value": "{space.5}" },
+      "radius": { "value": "{radius.lg}" }
+    },
+    "analyticsWorkspace": {
+      "summaryWidth": { "value": "272px" },
+      "chartMinHeight": { "value": "258px" },
+      "chartMaxHeight": { "value": "400px" }
     }
   }
 }
-

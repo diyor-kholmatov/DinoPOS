@@ -1,9 +1,17 @@
 import { Inbox } from "lucide-react";
 import type { ReactNode } from "react";
+import { FeedbackState } from "@/components/patterns/feedback-state";
 import { cn } from "@/lib/cn";
 
 export function PageLayout({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("min-h-screen p-3 sm:p-4 lg:p-6", className)}>{children}</div>;
+  return (
+    <div className={cn(
+      "min-h-screen w-full min-w-0 p-[var(--component-page-mobile-padding)] sm:p-[var(--component-page-tablet-padding)] lg:p-[var(--component-page-desktop-padding)]",
+      className,
+    )}>
+      {children}
+    </div>
+  );
 }
 
 export function PageHeader({
@@ -81,14 +89,13 @@ export function SectionHeader({
 
 export function EmptyState({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
   return (
-    <div className="grid min-h-48 place-items-center rounded-md border border-dashed border-border p-5 text-center">
-      <div>
-        <Inbox className="mx-auto size-8 text-faint" aria-hidden="true" />
-        <strong className="mt-3 block text-ink">{title}</strong>
-        <p className="mt-1 max-w-sm text-sm text-muted">{description}</p>
-        {action ? <div className="mt-4">{action}</div> : null}
-      </div>
-    </div>
+    <FeedbackState
+      icon={Inbox}
+      title={title}
+      description={description}
+      action={action}
+      className="min-h-48 rounded-md border border-dashed border-border p-5"
+    />
   );
 }
 

@@ -1,7 +1,8 @@
 import type { EChartsOption, LineSeriesOption } from "echarts";
 import ReactECharts from "echarts-for-react";
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
+import { FeedbackState } from "@/components/patterns/feedback-state";
 import { useSessionStore } from "@/stores/session-store";
 
 interface SeriesInput {
@@ -12,7 +13,7 @@ interface SeriesInput {
 }
 
 interface ChartStateProps {
-  height: number;
+  height: CSSProperties["height"];
   ariaLabel: string;
   isLoading?: boolean;
   errorMessage?: string;
@@ -23,11 +24,15 @@ function ChartState({ height, ariaLabel, isLoading, errorMessage, isEmpty }: Cha
   const { t } = useTranslation();
   if (!isLoading && !errorMessage && !isEmpty) return null;
   return (
-    <div className="grid place-items-center text-center text-sm text-muted" style={{ height }} role="status" aria-label={ariaLabel}>
-      <span className={errorMessage ? "text-danger" : ""}>
-        {isLoading ? t("common.loading") : errorMessage || t("chart.noData")}
-      </span>
-    </div>
+    <FeedbackState
+      title={isLoading ? t("common.loading") : errorMessage || t("chart.noData")}
+      isLoading={isLoading}
+      tone={errorMessage ? "danger" : "neutral"}
+      role={errorMessage ? "alert" : "status"}
+      ariaLabel={ariaLabel}
+      className="text-sm text-muted"
+      style={{ height }}
+    />
   );
 }
 
@@ -59,7 +64,7 @@ export function TimeSeriesChart({
   labels: string[];
   series: SeriesInput[];
   ariaLabel: string;
-  height?: number;
+  height?: CSSProperties["height"];
   showLegend?: boolean;
   showZoom?: boolean;
   valueFormatter?: (value: number) => string;
@@ -114,7 +119,7 @@ export function TimeSeriesChart({
         borderWidth: 1,
         padding: dashboardStyle ? [10, 12] : undefined,
         confine: true,
-        extraCssText: dashboardStyle ? "border-radius:6px;box-shadow:0 8px 24px rgb(20 20 16 / 0.12);" : undefined,
+        extraCssText: dashboardStyle ? "border-radius:var(--radius-sm);box-shadow:var(--shadow-md);" : undefined,
         textStyle: { color: tokens.ink, fontSize: dashboardStyle ? 12 : undefined },
         axisPointer: { type: "line", lineStyle: { type: "dashed", width: 1, color: tokens.muted } },
         valueFormatter: tooltipValueFormatter

@@ -54,14 +54,17 @@
   --size-primary-action: 48px;
   --size-compact-row: 44px;
   --size-comfortable-row: 52px;
-  --component-navigation-rail-compact-width: 72px;
-  --component-navigation-rail-expanded-width: 232px;
-  --component-navigation-rail-item-height: 48px;
+  --component-navigation-rail-compact-width: 64px;
+  --component-navigation-rail-expanded-width: 176px;
+  --component-navigation-rail-item-height: 40px;
   --component-control-height: 44px;
   --component-control-small-height: 36px;
   --component-page-desktop-padding: 24px;
   --component-page-tablet-padding: 20px;
   --component-page-mobile-padding: 16px;
+  --component-analytics-workspace-summary-width: 272px;
+  --component-analytics-workspace-chart-min-height: 258px;
+  --component-analytics-workspace-chart-max-height: 400px;
   --color-action-primary: var(--color-lime-500);
   --color-action-primary-hover: var(--color-lime-700);
   --color-action-primary-text: var(--color-neutral-950);
@@ -83,4 +86,7 @@
   --color-text-secondary: var(--color-neutral-600);
   --color-text-muted: var(--color-neutral-500);
   --color-text-inverse: var(--color-neutral-0);
+  --component-workspace-padding: var(--space-5);
+  --component-workspace-section-gap: var(--space-5);
+  --component-workspace-radius: var(--radius-lg);
 }

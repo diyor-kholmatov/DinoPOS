@@ -2,7 +2,10 @@
 
 Status: approved visual direction. Future work may restore behavior and polish spacing, but must not replace this composition or visual language without a separate design review.
 
-Reference screenshot: [`dashboard-approved-1440x900.png`](./dashboard-approved-1440x900.png)
+Reference screenshots:
+
+- Standard desktop: [`app-shell-responsive-1440x900.png`](./app-shell-responsive-1440x900.png)
+- Large screen: [`app-shell-responsive-2560x1440.png`](./app-shell-responsive-2560x1440.png)
 
 ## Visual Rules
 
@@ -28,12 +31,12 @@ Action colors must not be used as chart categories. Semantic colors must communi
 
 ## Desktop Layout
 
-- Expanded Dashboard sidebar: 176px. Manual collapsed state: 64px. Expanded remains the desktop default.
-- Content: fluid width with a 1600px maximum and 24px page padding.
+- Expanded application sidebar: 176px. Manual collapsed state: 64px. Expanded remains the desktop default.
+- Content: fluid width after the Sidebar with no application-level maximum and 24px desktop page padding. Narrow forms and reading-oriented content may define a functional maximum.
 - Header: 40px minimum height. Store scope is the primary title. New Sale is a compact 40px action.
 - Filter rail: 40px high, integrated surface, period selector on the left, date range on the right.
 - Primary analytics workspace at 1440x900: approximately 375px high, 8px radius, 20px internal padding.
-- Chart: dominant region with a 258px visualization height.
+- Chart: dominant region with a responsive height of `clamp(258px, 28vh, 400px)`.
 - Period summary: 272px at 1280px and wider. It moves below the chart at narrower widths and becomes a two-column definition list.
 - Detail control: 256px wide and 40px high so RU, UZ, and EN values remain readable.
 - Secondary operational workspace: one shared border with two regions. Internal padding is 16px, data rows are 48px, and Needs attention shows at most three exceptions.
@@ -41,10 +44,13 @@ Action colors must not be used as chart categories. Semantic colors must communi
 
 ## Responsive Behavior
 
+- 2560px and 2048px: the application uses the full width after the 176px Sidebar; no centered content island or CSS scaling is allowed.
+- 1920px: the same fluid shell is preserved and analytical height grows with the viewport.
 - 1440px: expanded 176px sidebar, chart and 272px summary side by side, lower workspace split into two regions.
 - 1280px: same composition with a fluid chart region. No horizontal page overflow.
 - 1024px: expanded 176px sidebar remains visible; summary moves below the chart in two columns; lower workspace stays structured and the page scrolls vertically.
-- Values must remain right-aligned, non-wrapping, and free from label overlap at all three review widths.
+- Values must remain right-aligned, non-wrapping, and free from label overlap at every review width.
+- Light is the startup theme even when the operating system prefers dark. Dark mode is enabled only by the explicit application control.
 
 ## Period And Detail Behavior
 
@@ -70,3 +76,5 @@ The previous period is the immediately preceding range with the same duration. E
 ## Foundation For Remaining Modules
 
 Future modules should reuse this sidebar, type scale, warm neutral surfaces, Option A role-based colors, 4px spacing grid, restrained borders, 40px controls, 44-48px operational rows, and right-aligned tabular numeric columns. They should not copy the Dashboard composition when another workflow requires a different information structure.
+
+The implementation inventory and adoption rules are documented in [`retail-os-ui-foundation.md`](./retail-os-ui-foundation.md). Dashboard now consumes the shared `PageContextHeader`, `WorkspaceSurface`, `WorkspaceRegion`, and `SummaryList` patterns rather than keeping those rules in page-only markup.
