@@ -16,6 +16,7 @@ export function NavigationItem({ item, label, expanded, onNavigate, compact = fa
   const link = (
     <NavLink
       to={item.to}
+      end
       onClick={onNavigate}
       aria-label={!expanded ? label : undefined}
       className={({ isActive }) => cn(

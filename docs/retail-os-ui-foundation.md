@@ -22,6 +22,8 @@ Do not add color literals, custom spacing, radii, or shadows to feature modules.
 - `ApplicationHeader`: shared mobile header.
 - `MobileNavigationDrawer`: mobile navigation built on the shared `Drawer` primitive.
 
+The Sidebar supports user-specific navigation preferences. Modules in Pinned stay visible above More; users can enter Customize navigation to pin, unpin, drag across groups, or reorder with the keyboard. Preferences store stable route IDs in `dinopos-v6-session`, normalize missing or retired routes during hydration, and can be reset to the approved default layout.
+
 ### Actions and inputs
 
 - `Button`: primary, secondary, quiet, danger, loading, disabled, and size variants.

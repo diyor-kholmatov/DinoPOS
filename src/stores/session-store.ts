@@ -3,6 +3,12 @@ import type { Employee } from "@/entities/shift/model";
 import type { Store } from "@/entities/store/model";
 import type { LocaleCode } from "@/lib/format";
 import { bootstrap } from "@/lib/legacy/bootstrap";
+import {
+  moveNavigationPath,
+  normalizeNavigationPreferences,
+  toggleNavigationPin,
+  type NavigationPreferenceGroup,
+} from "@/lib/navigation-preferences";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -19,6 +25,8 @@ interface SessionState {
   locale: LocaleCode;
   theme: "light" | "dark";
   navigationExpanded: boolean;
+  navigationPinnedPaths: string[];
+  navigationMorePaths: string[];
   mobileNavigationOpen: boolean;
   setSelectedStore: (storeId: string) => boolean;
   openShift: (cashierId: string, openingAmount: number) => void;
@@ -32,8 +40,13 @@ interface SessionState {
   setLocale: (locale: LocaleCode) => void;
   toggleTheme: () => void;
   toggleNavigation: () => void;
+  toggleNavigationPin: (path: string) => void;
+  moveNavigation: (sourcePath: string, targetPath: string | null, targetGroup: NavigationPreferenceGroup) => void;
+  resetNavigation: () => void;
   setMobileNavigationOpen: (open: boolean) => void;
 }
+
+const defaultNavigationPreferences = normalizeNavigationPreferences();
 
 export const useSessionStore = create<SessionState>()(
   persist(
@@ -50,6 +63,7 @@ export const useSessionStore = create<SessionState>()(
       locale: bootstrap.locale,
       theme: bootstrap.theme,
       navigationExpanded: bootstrap.navigationExpanded,
+      ...defaultNavigationPreferences,
       mobileNavigationOpen: false,
       setSelectedStore: (storeId) => {
         if (get().register.isOpen || !get().stores.some((store) => store.id === storeId)) {
@@ -117,6 +131,15 @@ export const useSessionStore = create<SessionState>()(
       setLocale: (locale) => set({ locale }),
       toggleTheme: () => set((state) => ({ theme: state.theme === "light" ? "dark" : "light" })),
       toggleNavigation: () => set((state) => ({ navigationExpanded: !state.navigationExpanded })),
+      toggleNavigationPin: (path) => set((state) => toggleNavigationPin({
+        navigationPinnedPaths: state.navigationPinnedPaths,
+        navigationMorePaths: state.navigationMorePaths,
+      }, path)),
+      moveNavigation: (sourcePath, targetPath, targetGroup) => set((state) => moveNavigationPath({
+        navigationPinnedPaths: state.navigationPinnedPaths,
+        navigationMorePaths: state.navigationMorePaths,
+      }, sourcePath, targetPath, targetGroup)),
+      resetNavigation: () => set(normalizeNavigationPreferences()),
       setMobileNavigationOpen: (mobileNavigationOpen) => set({ mobileNavigationOpen }),
     }),
     {
@@ -132,7 +155,20 @@ export const useSessionStore = create<SessionState>()(
         locale: state.locale,
         theme: state.theme,
         navigationExpanded: state.navigationExpanded,
+        navigationPinnedPaths: state.navigationPinnedPaths,
+        navigationMorePaths: state.navigationMorePaths,
       }),
+      merge: (persistedState, currentState) => {
+        const persisted = (persistedState ?? {}) as Partial<SessionState>;
+        return {
+          ...currentState,
+          ...persisted,
+          ...normalizeNavigationPreferences(
+            persisted.navigationPinnedPaths ?? currentState.navigationPinnedPaths,
+            persisted.navigationMorePaths ?? currentState.navigationMorePaths,
+          ),
+        };
+      },
     },
   ),
 );
