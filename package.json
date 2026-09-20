@@ -9,13 +9,14 @@
     "dev": "vite",
     "prebuild": "pnpm tokens",
     "build": "tsc -b && vite build && node scripts/finalize-pages.mjs",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "storybook": "pnpm tokens && storybook dev -p 6006",
     "build-storybook": "pnpm tokens && storybook build",
-    "check": "pnpm tokens && tsc -b && vitest run && vite build && node scripts/finalize-pages.mjs"
+    "check": "pnpm tokens && pnpm check:boundaries && tsc -b && vitest run && vite build && node scripts/finalize-pages.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",

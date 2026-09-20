@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const routes = [
-  ["dashboard", "Dashboard"],
+  ["dashboard", "All stores"],
   ["catalog", "Products & Services"],
   ["catalog/import", "Import"],
   ["inventory", "Inventory / Stocktake"],
@@ -46,7 +46,7 @@ test("language switching applies to every route and persists", async ({ page }, 
   await page.getByRole("button", { name: "Profile" }).click();
   await page.getByRole("button", { name: "Language" }).click();
   await page.getByRole("option", { name: "Русский" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Главная" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Все магазины" })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("heading", { level: 1, name: "Главная" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Все магазины" })).toBeVisible();
 });
