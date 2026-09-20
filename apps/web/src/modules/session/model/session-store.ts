@@ -1,14 +1,16 @@
-import type { PaymentMethod } from "@/entities/sale/model";
-import type { Employee } from "@/entities/shift/model";
-import type { Store } from "@/entities/store/model";
-import type { LocaleCode } from "@/lib/format";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import type { PaymentMethod } from "@/modules/sales/model";
+import type { Employee } from "@/modules/session/model/employee";
+import type { Store } from "@/modules/session/model/store";
+import type { LocaleCode } from "@/shared/lib/format";
+import { bootstrap } from "@/shared/legacy/bootstrap";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 import {
   moveNavigationPath,
   normalizeNavigationPreferences,
   toggleNavigationPin,
   type NavigationPreferenceGroup,
-} from "@/lib/navigation-preferences";
+} from "@/modules/session/model/navigation-preferences";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -143,9 +145,9 @@ export const useSessionStore = create<SessionState>()(
       setMobileNavigationOpen: (mobileNavigationOpen) => set({ mobileNavigationOpen }),
     }),
     {
-      name: "dinopos-v6-session",
+      name: STORAGE_KEYS.session,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getBrowserStorage),
       partialize: (state) => ({
         selectedStoreId: state.selectedStoreId,
         register: state.register,

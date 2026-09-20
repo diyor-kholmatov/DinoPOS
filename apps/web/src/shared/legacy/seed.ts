@@ -1,9 +1,9 @@
-import type { Customer } from "@/entities/customer/model";
-import type { Product } from "@/entities/product/model";
-import type { Register } from "@/entities/register/model";
-import type { Sale } from "@/entities/sale/model";
-import type { Employee } from "@/entities/shift/model";
-import type { Store } from "@/entities/store/model";
+import type { Customer } from "@/modules/customers/model/customer";
+import type { Product } from "@/modules/catalog/model/product";
+import type { Register } from "@/modules/session/model/register";
+import type { Sale } from "@/modules/sales/model/sale";
+import type { Employee } from "@/modules/session/model/employee";
+import type { Store } from "@/modules/session/model/store";
 
 export const seedStores: Store[] = [
   { id: "b1", name: "Downtown Store" },

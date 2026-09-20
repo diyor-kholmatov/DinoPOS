@@ -1,6 +1,8 @@
-import type { Customer } from "@/entities/customer/model";
-import type { PaymentMethod } from "@/entities/sale/model";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import type { Customer } from "@/modules/customers/model/customer";
+import type { PaymentMethod } from "@/modules/sales/model";
+import { bootstrap } from "@/shared/legacy/bootstrap";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -79,9 +81,9 @@ export const useCustomerStore = create<CustomerState>()(
       },
     }),
     {
-      name: "dinopos-v6-customers",
+      name: STORAGE_KEYS.customers,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getBrowserStorage),
     },
   ),
 );

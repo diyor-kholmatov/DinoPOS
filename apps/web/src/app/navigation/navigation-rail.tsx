@@ -1,9 +1,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { NavigationContent } from "@/components/navigation/navigation-content";
-import { IconButton } from "@/components/ui/icon-button";
-import { cn } from "@/lib/cn";
-import { useSessionStore } from "@/stores/session-store";
+import { NavigationContent } from "@/app/navigation/navigation-content";
+import { IconButton } from "@/shared/ui/icon-button";
+import { cn } from "@/shared/lib/cn";
+import { useSessionStore } from "@/modules/session/model";
 
 export function NavigationRail() {
   const { t } = useTranslation();

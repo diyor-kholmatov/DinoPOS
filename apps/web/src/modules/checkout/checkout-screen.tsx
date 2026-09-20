@@ -12,24 +12,24 @@ import type { LucideIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import type { PaymentMethod, Sale } from "@/entities/sale/model";
-import { calculateTotals } from "@/features/checkout/model/totals";
-import { completeSale, type SaleFailureCode } from "@/features/checkout/model/complete-sale";
-import { CartLine } from "@/features/checkout/components/cart-line";
-import { OpenShiftDialog } from "@/features/checkout/components/open-shift-dialog";
-import { ProductTile } from "@/features/checkout/components/product-tile";
-import { ReceiptDialog } from "@/features/checkout/components/receipt-dialog";
-import { RegisterStatusBar } from "@/features/checkout/components/register-status-bar";
-import { Button } from "@/components/ui/button";
-import { NumberField } from "@/components/ui/number-field";
-import { SearchField } from "@/components/ui/search-field";
-import { SelectField } from "@/components/ui/select-field";
-import { cn } from "@/lib/cn";
-import { formatMoney } from "@/lib/format";
-import { productAvailability, useCatalogStore } from "@/stores/catalog-store";
-import { useCheckoutStore } from "@/stores/checkout-store";
-import { useCustomerStore } from "@/stores/customer-store";
-import { fiscalizationEnabled, useSessionStore } from "@/stores/session-store";
+import type { PaymentMethod, Sale } from "@/modules/sales/model";
+import { calculateTotals } from "@/modules/checkout/model/totals";
+import { completeSale, type SaleFailureCode } from "@/modules/checkout/model/complete-sale";
+import { CartLine } from "@/modules/checkout/components/cart-line";
+import { OpenShiftDialog } from "@/modules/checkout/components/open-shift-dialog";
+import { ProductTile } from "@/modules/checkout/components/product-tile";
+import { ReceiptDialog } from "@/modules/checkout/components/receipt-dialog";
+import { RegisterStatusBar } from "@/modules/checkout/components/register-status-bar";
+import { Button } from "@/shared/ui/button";
+import { NumberField } from "@/shared/ui/number-field";
+import { SearchField } from "@/shared/ui/search-field";
+import { SelectField } from "@/shared/ui/select-field";
+import { cn } from "@/shared/lib/cn";
+import { formatMoney } from "@/shared/lib/format";
+import { productAvailability, useCatalogStore } from "@/modules/catalog/model";
+import { useCheckoutStore } from "@/modules/checkout/model/checkout-store";
+import { useCustomerStore } from "@/modules/customers/model";
+import { fiscalizationEnabled, useSessionStore } from "@/modules/session/model";
 
 interface PaymentOption {
   id: PaymentMethod;
@@ -94,6 +94,7 @@ export function CheckoutPage() {
 
   const fiscalEnabled = fiscalization && entitlements.fiscalization !== false;
   const saleAvailable = registerMode !== "full" || register.isOpen;
+  const cartItemCount = cart.reduce((sum, line) => sum + line.quantity, 0);
   const totals = useMemo(
     () => calculateTotals(cart, receiptDiscount, fiscalizationEnabled()),
     [cart, receiptDiscount, fiscalization, entitlements],
@@ -187,7 +188,7 @@ export function CheckoutPage() {
             className={cn("min-h-9 rounded-sm px-3 text-sm font-semibold", mobileView === "cart" ? "bg-raised text-ink shadow-sm" : "text-muted")}
             onClick={() => setMobileView("cart")}
           >
-            {t("checkout.cart")} ({cart.reduce((sum, line) => sum + line.quantity, 0)})
+            {t("checkout.cart")} ({cartItemCount})
           </button>
         </div>
       </header>
@@ -254,7 +255,7 @@ export function CheckoutPage() {
           <div className="border-b border-border p-4">
             <div className="flex items-center justify-between gap-3">
               <h2 id="cart-title" className="text-base font-bold text-ink">{t("checkout.cart")}</h2>
-              <span className="text-xs text-muted">{t("checkout.itemsCount", { count: cart.reduce((sum, line) => sum + line.quantity, 0) })}</span>
+              <span className="text-xs text-muted">{t("checkout.itemsCount", { count: cartItemCount })}</span>
             </div>
             <SelectField
               label={t("checkout.customer")}

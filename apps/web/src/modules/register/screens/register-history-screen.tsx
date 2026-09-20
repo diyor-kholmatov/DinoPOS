@@ -1,11 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
-import { DataTable } from "@/components/data/data-table";
-import { Metric, MetricStrip, PageHeader, PageLayout, SectionHeader } from "@/components/patterns/page";
-import { Badge } from "@/components/ui/badge";
-import { formatDateTime, formatMoney } from "@/lib/format";
-import { useOperationsStore, type ShiftHistoryRecord } from "@/stores/operations-store";
-import { useSessionStore } from "@/stores/session-store";
+import { DataTable } from "@/shared/data/data-table";
+import { Metric, MetricStrip, PageHeader, PageLayout, SectionHeader } from "@/shared/patterns/page";
+import { Badge } from "@/shared/ui/badge";
+import { formatDateTime, formatMoney } from "@/shared/lib/format";
+import { useOperationsStore, type ShiftHistoryRecord } from "@/modules/operations/model";
+import { useSessionStore } from "@/modules/session/model";
 
 export function RegisterHistoryPage() {
   const { t } = useTranslation();

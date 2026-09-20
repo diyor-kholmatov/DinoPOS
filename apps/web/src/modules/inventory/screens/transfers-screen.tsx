@@ -5,16 +5,16 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
-import { DataTable } from "@/components/data/data-table";
-import { PageHeader, PageLayout, SectionHeader } from "@/components/patterns/page";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SelectField } from "@/components/ui/select-field";
-import { formatDateTime } from "@/lib/format";
-import { useCatalogStore } from "@/stores/catalog-store";
-import { useOperationsStore, type TransferRecord } from "@/stores/operations-store";
-import { useSessionStore } from "@/stores/session-store";
+import { DataTable } from "@/shared/data/data-table";
+import { PageHeader, PageLayout, SectionHeader } from "@/shared/patterns/page";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { SelectField } from "@/shared/ui/select-field";
+import { formatDateTime } from "@/shared/lib/format";
+import { useCatalogStore } from "@/modules/catalog/model";
+import { useOperationsStore, type TransferRecord } from "@/modules/operations/model";
+import { useSessionStore } from "@/modules/session/model";
 
 const TransferSchema = z.object({
   sourceStoreId: z.string().min(1),

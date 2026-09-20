@@ -1,9 +1,9 @@
 import { CircleAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { SelectField } from "@/components/ui/select-field";
-import { cn } from "@/lib/cn";
-import { useSessionStore } from "@/stores/session-store";
+import { Button } from "@/shared/ui/button";
+import { SelectField } from "@/shared/ui/select-field";
+import { cn } from "@/shared/lib/cn";
+import { useSessionStore } from "@/modules/session/model";
 
 interface RegisterStatusBarProps {
   onOpenShift: () => void;

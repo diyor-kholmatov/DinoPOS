@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateTotals } from "@/features/checkout/model/totals";
+import { calculateTotals } from "@/modules/checkout/model/totals";
 
 describe("calculateTotals", () => {
   const cart = [{

@@ -1,10 +1,10 @@
 import { Menu } from "lucide-react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { NavigationContent } from "@/components/navigation/navigation-content";
-import { IconButton } from "@/components/ui/icon-button";
-import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { useSessionStore } from "@/stores/session-store";
+import { NavigationContent } from "@/app/navigation/navigation-content";
+import { IconButton } from "@/shared/ui/icon-button";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/shared/ui/drawer";
+import { useSessionStore } from "@/modules/session/model";
 
 export function MobileNavigationDrawer() {
   const { t } = useTranslation();

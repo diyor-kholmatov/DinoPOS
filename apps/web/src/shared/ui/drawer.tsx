@@ -3,4 +3,4 @@ export {
   SheetContent as DrawerContent,
   SheetTitle as DrawerTitle,
   SheetTrigger as DrawerTrigger,
-} from "@/components/ui/sheet";
+} from "@/shared/ui/sheet";

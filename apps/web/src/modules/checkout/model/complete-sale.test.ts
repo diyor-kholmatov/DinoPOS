@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { completeSale } from "@/features/checkout/model/complete-sale";
-import { seedCustomers, seedEmployees, seedProducts, seedStores } from "@/lib/legacy/seed";
-import { useCatalogStore } from "@/stores/catalog-store";
-import { useCheckoutStore } from "@/stores/checkout-store";
-import { useCustomerStore } from "@/stores/customer-store";
-import { useSalesStore } from "@/stores/sales-store";
-import { useSessionStore } from "@/stores/session-store";
+import { completeSale } from "@/modules/checkout/model/complete-sale";
+import { seedCustomers, seedEmployees, seedProducts, seedStores } from "@/shared/legacy/seed";
+import { useCatalogStore } from "@/modules/catalog/model";
+import { useCheckoutStore } from "@/modules/checkout/model/checkout-store";
+import { useCustomerStore } from "@/modules/customers/model";
+import { useSalesStore } from "@/modules/sales/model";
+import { useSessionStore } from "@/modules/session/model";
 
 describe("completeSale", () => {
   beforeEach(() => {

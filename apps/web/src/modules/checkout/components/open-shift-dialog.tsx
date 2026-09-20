@@ -2,17 +2,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { NumberField } from "@/components/ui/number-field";
-import { SelectField } from "@/components/ui/select-field";
-import { useSessionStore } from "@/stores/session-store";
+} from "@/shared/ui/dialog";
+import { NumberField } from "@/shared/ui/number-field";
+import { SelectField } from "@/shared/ui/select-field";
+import { useSessionStore } from "@/modules/session/model";
 
 const OpenShiftSchema = z.object({
   cashierId: z.string().min(1),

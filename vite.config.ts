@@ -3,14 +3,17 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => ({
+  root: "apps/web",
   base: mode === "production" ? "/DinoPOS/" : "/",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": new URL("./src", import.meta.url).pathname,
+      "@": new URL("./apps/web/src", import.meta.url).pathname,
     },
   },
   build: {
+    outDir: "../../dist",
+    emptyOutDir: true,
     rolldownOptions: {
       output: {
         manualChunks(id) {

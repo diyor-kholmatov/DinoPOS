@@ -6,18 +6,18 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { Customer } from "@/entities/customer/model";
-import { DataTable } from "@/components/data/data-table";
-import { Metric, MetricStrip, PageHeader, PageLayout, SectionHeader, SegmentedControl } from "@/components/patterns/page";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { IconButton } from "@/components/ui/icon-button";
-import { Input } from "@/components/ui/input";
-import { SearchField } from "@/components/ui/search-field";
-import { formatMoney } from "@/lib/format";
-import { useCustomerStore } from "@/stores/customer-store";
-import { useSessionStore } from "@/stores/session-store";
+import type { Customer } from "@/modules/customers/model/customer";
+import { DataTable } from "@/shared/data/data-table";
+import { Metric, MetricStrip, PageHeader, PageLayout, SectionHeader, SegmentedControl } from "@/shared/patterns/page";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
+import { IconButton } from "@/shared/ui/icon-button";
+import { Input } from "@/shared/ui/input";
+import { SearchField } from "@/shared/ui/search-field";
+import { formatMoney } from "@/shared/lib/format";
+import { useCustomerStore } from "@/modules/customers/model/customer-store";
+import { useSessionStore } from "@/modules/session/model";
 
 const CustomerSchema = z.object({ name: z.string().trim().min(2), phone: z.string().trim().min(5), loyalty: z.string().trim().min(1) });
 type CustomerValues = z.infer<typeof CustomerSchema>;
@@ -39,6 +39,9 @@ export function CustomersPage() {
     return (!needle || `${customer.name} ${customer.phone}`.toLocaleLowerCase().includes(needle))
       && (filter === "all" || (filter === "debt" && customer.debt > 0) || (filter === "credit" && customer.prepayment > 0));
   }), [customers, filter, search]);
+  const totalDebt = customers.reduce((sum, customer) => sum + customer.debt, 0);
+  const totalPrepayment = customers.reduce((sum, customer) => sum + customer.prepayment, 0);
+  const totalSpent = customers.reduce((sum, customer) => sum + customer.totalSpent, 0);
   const submit = (values: CustomerValues) => {
     addCustomer({ id: `c-${crypto.randomUUID()}`, name: values.name, phone: values.phone, totalSpent: 0, debt: 0, prepayment: 0, loyalty: values.loyalty, receiptHistory: [] });
     setAddOpen(false); reset(); toast.success(t("toast.customerSaved"));
@@ -63,9 +66,9 @@ export function CustomersPage() {
       <PageHeader title={t("clients")} description={t("clients.description")} actions={<Button variant="primary" onClick={() => setAddOpen(true)}><Plus className="size-4" />{t("clients.add")}</Button>} />
       <MetricStrip>
         <Metric label={t("clients.allCustomers")} value={String(customers.length)} />
-        <Metric label={t("reports.customersOwe")} value={formatMoney(customers.reduce((sum, item) => sum + item.debt, 0), locale)} tone="danger" />
-        <Metric label={t("reports.customerCredit")} value={formatMoney(customers.reduce((sum, item) => sum + item.prepayment, 0), locale)} tone="positive" />
-        <Metric label={t("clients.totalSpent")} value={formatMoney(customers.reduce((sum, item) => sum + item.totalSpent, 0), locale)} />
+        <Metric label={t("reports.customersOwe")} value={formatMoney(totalDebt, locale)} tone="danger" />
+        <Metric label={t("reports.customerCredit")} value={formatMoney(totalPrepayment, locale)} tone="positive" />
+        <Metric label={t("clients.totalSpent")} value={formatMoney(totalSpent, locale)} />
       </MetricStrip>
       <section className="mt-5 flex flex-wrap items-center gap-3"><SearchField className="w-full sm:max-w-md" label={t("table.search")} placeholder={t("table.search")} value={search} onChange={setSearch} /><SegmentedControl label={t("clients.balanceFilter")} value={filter} onChange={setFilter} options={[{ id: "all", label: t("common.all") }, { id: "debt", label: t("payment.debt") }, { id: "credit", label: t("payment.prepayment") }]} /></section>
       <section className="mt-5"><SectionHeader title={t("clients.allCustomers")} /><DataTable data={visible} columns={columns} caption={t("clients.allCustomers")} emptyMessage={t("clients.noResults")} /></section>

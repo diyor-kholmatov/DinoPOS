@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { MobileNavigationDrawer } from "@/components/navigation/mobile-navigation-drawer";
+import { MobileNavigationDrawer } from "@/app/navigation/mobile-navigation-drawer";
 
 export function ApplicationHeader() {
   const { t } = useTranslation();

@@ -1,8 +1,8 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { ComponentProps } from "react";
-import { IconButton } from "@/components/ui/icon-button";
-import { cn } from "@/lib/cn";
+import { IconButton } from "@/shared/ui/icon-button";
+import { cn } from "@/shared/lib/cn";
 
 export const Sheet = DialogPrimitive.Root;
 export const SheetTrigger = DialogPrimitive.Trigger;

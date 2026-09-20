@@ -1,6 +1,4 @@
-import { loadBootstrap } from "@/lib/legacy/migrate";
+import { loadBootstrap } from "@/shared/legacy/migrate";
+import { getOptionalBrowserStorage } from "@/shared/persistence/storage";
 
-export const bootstrap = loadBootstrap(
-  typeof window === "undefined" ? undefined : window.localStorage,
-);
-
+export const bootstrap = loadBootstrap(getOptionalBrowserStorage());

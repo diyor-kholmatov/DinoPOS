@@ -17,9 +17,8 @@ import {
 } from "react-aria-components";
 import type { CalendarDate, DateValue } from "@internationalized/date";
 import { useTranslation } from "react-i18next";
-import { useSessionStore } from "@/stores/session-store";
-import { LOCALES } from "@/lib/format";
-import { cn } from "@/lib/cn";
+import { LOCALES } from "@/shared/lib/format";
+import { cn } from "@/shared/lib/cn";
 
 interface DateRangeFieldProps {
   label: string;
@@ -98,8 +97,9 @@ function MonthGrid({
 }
 
 export function DateRangeField({ label, value, onChange, compact = false }: DateRangeFieldProps) {
-  const { t } = useTranslation();
-  const locale = useSessionStore((state) => state.locale);
+  const { t, i18n } = useTranslation();
+  const language = i18n.resolvedLanguage?.split("-")[0] ?? "en";
+  const locale = language in LOCALES ? language as keyof typeof LOCALES : "en";
   const [focusedValue, setFocusedValue] = useState<DateValue>(value.start);
   const moveVisibleMonth = (offset: number, field: { month?: number; year?: number }) => {
     const visible = focusedValue.add({ months: offset }).set(field);

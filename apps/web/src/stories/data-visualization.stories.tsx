@@ -1,8 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge } from "@/components/ui/badge";
-import { ChartCard } from "@/components/data/chart-card";
-import { DataTable } from "@/components/data/data-table";
+import { Badge } from "@/shared/ui/badge";
+import { ChartCard } from "@/shared/data/chart-card";
+import { DataTable } from "@/shared/data/data-table";
 
 interface InventoryRow { item: string; stock: number; status: "In stock" | "Low"; }
 const rows: InventoryRow[] = [

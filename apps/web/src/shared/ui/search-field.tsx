@@ -6,7 +6,7 @@ import {
   SearchField as AriaSearchField,
 } from "react-aria-components";
 import type { KeyboardEventHandler, RefObject } from "react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 interface SearchFieldProps {
   label: string;

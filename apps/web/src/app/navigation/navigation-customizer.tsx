@@ -1,10 +1,10 @@
 import { GripVertical, Pin, PinOff, RotateCcw } from "lucide-react";
 import { useState, type DragEvent, type KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
-import type { NavigationEntry } from "@/components/navigation/navigation-data";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
-import type { NavigationPreferenceGroup } from "@/lib/navigation-preferences";
+import type { NavigationEntry } from "@/app/navigation/navigation-data";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/cn";
+import type { NavigationPreferenceGroup } from "@/modules/session/model";
 
 interface NavigationCustomizerProps {
   pinnedItems: NavigationEntry[];

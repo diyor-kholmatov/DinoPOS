@@ -8,14 +8,14 @@ import {
   primaryNavigation,
   settingsNavigation,
   type NavigationEntry,
-} from "@/components/navigation/navigation-data";
-import { NavigationCustomizer } from "@/components/navigation/navigation-customizer";
-import { NavigationItem } from "@/components/navigation/navigation-item";
-import { ProfilePopover } from "@/components/navigation/profile-popover";
-import { Button } from "@/components/ui/button";
-import { Tooltip } from "@/components/ui/tooltip";
-import { cn } from "@/lib/cn";
-import { useSessionStore } from "@/stores/session-store";
+} from "@/app/navigation/navigation-data";
+import { NavigationCustomizer } from "@/app/navigation/navigation-customizer";
+import { NavigationItem } from "@/app/navigation/navigation-item";
+import { ProfilePopover } from "@/app/navigation/profile-popover";
+import { Button } from "@/shared/ui/button";
+import { Tooltip } from "@/shared/ui/tooltip";
+import { cn } from "@/shared/lib/cn";
+import { useSessionStore } from "@/modules/session/model";
 
 interface NavigationContentProps {
   expanded: boolean;

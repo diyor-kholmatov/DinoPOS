@@ -1,5 +1,7 @@
-import type { Sale } from "@/entities/sale/model";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import type { Sale } from "@/modules/sales/model/sale";
+import { bootstrap } from "@/shared/legacy/bootstrap";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -15,10 +17,9 @@ export const useSalesStore = create<SalesState>()(
       addSale: (sale) => set((state) => ({ sales: [sale, ...state.sales] })),
     }),
     {
-      name: "dinopos-v6-sales",
+      name: STORAGE_KEYS.sales,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getBrowserStorage),
     },
   ),
 );
-

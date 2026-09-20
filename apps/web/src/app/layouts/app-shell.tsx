@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import { ApplicationHeader } from "@/components/navigation/application-header";
-import { NavigationRail } from "@/components/navigation/navigation-rail";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import { ApplicationHeader } from "@/app/navigation/application-header";
+import { NavigationRail } from "@/app/navigation/navigation-rail";
+import { bootstrap } from "@/shared/legacy/bootstrap";
 import { useTranslation } from "react-i18next";
 
 export function AppShell() {

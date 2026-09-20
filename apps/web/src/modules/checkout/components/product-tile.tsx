@@ -1,8 +1,8 @@
 import { Coffee, Package, Scissors } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { Product } from "@/entities/product/model";
-import { cn } from "@/lib/cn";
-import { formatMoney, type LocaleCode } from "@/lib/format";
+import type { Product } from "@/modules/catalog/model";
+import { cn } from "@/shared/lib/cn";
+import { formatMoney, type LocaleCode } from "@/shared/lib/format";
 
 interface ProductTileProps {
   product: Product;

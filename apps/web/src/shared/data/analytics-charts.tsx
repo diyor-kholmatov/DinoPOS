@@ -2,8 +2,8 @@ import type { EChartsOption, LineSeriesOption } from "echarts";
 import ReactECharts from "echarts-for-react";
 import { useMemo, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
-import { FeedbackState } from "@/components/patterns/feedback-state";
-import { useSessionStore } from "@/stores/session-store";
+import { useDocumentTheme } from "@/shared/hooks/use-document-theme";
+import { FeedbackState } from "@/shared/patterns/feedback-state";
 
 interface SeriesInput {
   name: string;
@@ -74,7 +74,7 @@ export function TimeSeriesChart({
   isLoading?: boolean;
   errorMessage?: string;
 }) {
-  const theme = useSessionStore((state) => state.theme);
+  const theme = useDocumentTheme();
   const option = useMemo<EChartsOption>(() => {
     const tokens = chartTokens();
     const zoomStart = labels.length > 120 ? Math.max(0, 100 - (120 / labels.length) * 100) : 0;
@@ -203,7 +203,7 @@ export function HorizontalBarChart({
   isLoading?: boolean;
   errorMessage?: string;
 }) {
-  const theme = useSessionStore((state) => state.theme);
+  const theme = useDocumentTheme();
   const option = useMemo<EChartsOption>(() => {
     const tokens = chartTokens();
     return {
@@ -246,7 +246,7 @@ export function DonutChart({
   isLoading?: boolean;
   errorMessage?: string;
 }) {
-  const theme = useSessionStore((state) => state.theme);
+  const theme = useDocumentTheme();
   const option = useMemo<EChartsOption>(() => {
     const tokens = chartTokens();
     return {

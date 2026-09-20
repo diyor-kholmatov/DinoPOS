@@ -1,6 +1,8 @@
-import type { Product } from "@/entities/product/model";
-import type { CartLine, PaymentMethod } from "@/entities/sale/model";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import type { Product } from "@/modules/catalog/model";
+import type { CartLine, PaymentMethod } from "@/modules/sales/model";
+import { bootstrap } from "@/shared/legacy/bootstrap";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -129,9 +131,9 @@ export const useCheckoutStore = create<CheckoutState>()(
       clearAfterSale: () => set({ cart: [], receiptDiscount: 0 }),
     }),
     {
-      name: "dinopos-v6-checkout",
+      name: STORAGE_KEYS.checkout,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getBrowserStorage),
       partialize: (state) => ({
         cart: state.cart,
         selectedCustomerId: state.selectedCustomerId,

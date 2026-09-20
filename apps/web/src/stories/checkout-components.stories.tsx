@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CartLine } from "@/features/checkout/components/cart-line";
-import { ProductTile } from "@/features/checkout/components/product-tile";
-import { seedProducts } from "@/lib/legacy/seed";
+import { CartLine } from "@/modules/checkout";
+import { ProductTile } from "@/modules/checkout";
+import { seedProducts } from "@/shared/legacy/seed";
 
 const meta = { title: "Checkout/Product tile", component: ProductTile } satisfies Meta<typeof ProductTile>;
 export default meta;

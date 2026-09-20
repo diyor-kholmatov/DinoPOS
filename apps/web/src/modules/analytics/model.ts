@@ -1,7 +1,7 @@
 import type { CalendarDate } from "@internationalized/date";
 import type { RangeValue } from "react-aria-components";
-import type { Product } from "@/entities/product/model";
-import type { Sale } from "@/entities/sale/model";
+import type { Product } from "@/modules/catalog/model";
+import type { Sale } from "@/modules/sales/model";
 
 export interface AnalyticsPoint {
   label: string;

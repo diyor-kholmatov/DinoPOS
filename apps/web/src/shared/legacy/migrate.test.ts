@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LEGACY_BACKUP_KEY, LEGACY_STORAGE_KEY, loadBootstrap, migrateLegacyState } from "@/lib/legacy/migrate";
+import { LEGACY_BACKUP_KEY, LEGACY_STORAGE_KEY, loadBootstrap, migrateLegacyState } from "@/shared/legacy/migrate";
 
 describe("legacy migration", () => {
   const legacy = {

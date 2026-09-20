@@ -1,6 +1,6 @@
-import type { NavigationEntry } from "@/components/navigation/navigation-data";
-import { Tooltip } from "@/components/ui/tooltip";
-import { cn } from "@/lib/cn";
+import type { NavigationEntry } from "@/app/navigation/navigation-data";
+import { Tooltip } from "@/shared/ui/tooltip";
+import { cn } from "@/shared/lib/cn";
 import { NavLink } from "react-router-dom";
 
 interface NavigationItemProps {

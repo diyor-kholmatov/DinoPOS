@@ -10,9 +10,9 @@ import {
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { ErrorState, FeedbackState, LoadingState } from "@/components/patterns/feedback-state";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
+import { ErrorState, FeedbackState, LoadingState } from "@/shared/patterns/feedback-state";
+import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/cn";
 
 interface DataTableProps<TData> {
   data: TData[];

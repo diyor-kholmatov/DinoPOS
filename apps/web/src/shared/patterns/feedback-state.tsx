@@ -1,6 +1,6 @@
 import { AlertTriangle, LoaderCircle, type LucideIcon } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 interface FeedbackStateProps {
   title?: string;

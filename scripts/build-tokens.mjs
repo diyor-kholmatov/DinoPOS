@@ -16,7 +16,7 @@ for (const theme of ["light", "dark"]) {
     platforms: {
       css: {
         transformGroup: "css",
-        buildPath: "src/styles/generated/",
+        buildPath: "apps/web/src/styles/generated/",
         files: [
           {
             destination: `${theme}.css`,
@@ -33,4 +33,3 @@ for (const theme of ["light", "dark"]) {
 
   await dictionary.buildAllPlatforms();
 }
-

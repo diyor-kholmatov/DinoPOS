@@ -1,14 +1,14 @@
-import { SaleSchema, type Sale } from "@/entities/sale/model";
-import { calculateTotals } from "@/features/checkout/model/totals";
-import { useCatalogStore, validateCartStock } from "@/stores/catalog-store";
-import { useCheckoutStore } from "@/stores/checkout-store";
-import { useCustomerStore } from "@/stores/customer-store";
-import { useSalesStore } from "@/stores/sales-store";
+import { SaleSchema, type Sale } from "@/modules/sales/model";
+import { calculateTotals } from "@/modules/checkout/model/totals";
+import { useCatalogStore, validateCartStock } from "@/modules/catalog/model";
+import { useCheckoutStore } from "@/modules/checkout/model/checkout-store";
+import { useCustomerStore } from "@/modules/customers/model";
+import { useSalesStore } from "@/modules/sales/model";
 import {
   currentCashier,
   fiscalizationEnabled,
   useSessionStore,
-} from "@/stores/session-store";
+} from "@/modules/session/model";
 
 export type SaleFailureCode =
   | "empty_cart"

@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 
 interface CompanyProfile {
   businessName: string;
@@ -39,6 +41,6 @@ export const useSettingsStore = create<SettingsState>()(
       updateTaxes: (taxRate, serviceFee, rounding) => set({ taxRate, serviceFee, rounding }),
       togglePermission: (permission, enabled) => set((state) => ({ permissions: { ...state.permissions, [permission]: enabled } })),
     }),
-    { name: "dinopos-v6-settings", version: 1, storage: createJSONStorage(() => localStorage) },
+    { name: STORAGE_KEYS.settings, version: 1, storage: createJSONStorage(getBrowserStorage) },
   ),
 );

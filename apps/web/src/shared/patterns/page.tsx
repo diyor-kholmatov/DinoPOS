@@ -1,7 +1,7 @@
 import { Inbox } from "lucide-react";
 import type { ReactNode } from "react";
-import { FeedbackState } from "@/components/patterns/feedback-state";
-import { cn } from "@/lib/cn";
+import { FeedbackState } from "@/shared/patterns/feedback-state";
+import { cn } from "@/shared/lib/cn";
 
 export function PageLayout({ children, className }: { children: ReactNode; className?: string }) {
   return (

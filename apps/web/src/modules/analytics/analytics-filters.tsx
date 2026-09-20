@@ -2,15 +2,15 @@ import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import type { RangeValue } from "react-aria-components";
 import { Check, ChevronDown, Store } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { DateRangeField } from "@/components/ui/date-range-field";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { SegmentedControl } from "@/components/patterns/page";
-import { cn } from "@/lib/cn";
-import { useSessionStore } from "@/stores/session-store";
-import type { AnalyticsPeriod } from "@/features/analytics/dashboard-analytics";
+import { DateRangeField } from "@/shared/ui/date-range-field";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { Button } from "@/shared/ui/button";
+import { SegmentedControl } from "@/shared/patterns/page";
+import { cn } from "@/shared/lib/cn";
+import { useSessionStore } from "@/modules/session/model";
+import type { AnalyticsPeriod } from "@/modules/analytics/dashboard-analytics";
 
-export type { AnalyticsPeriod } from "@/features/analytics/dashboard-analytics";
+export type { AnalyticsPeriod } from "@/modules/analytics/dashboard-analytics";
 
 export function rangeForPeriod(period: AnalyticsPeriod): RangeValue<CalendarDate> {
   const end = today(getLocalTimeZone());

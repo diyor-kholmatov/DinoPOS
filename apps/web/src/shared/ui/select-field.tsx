@@ -9,7 +9,7 @@ import {
   SelectValue,
   type Key,
 } from "react-aria-components";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 export interface SelectOption {
   id: string;

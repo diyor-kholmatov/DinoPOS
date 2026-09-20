@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { Button } from "@/components/ui/button";
-import { Tooltip } from "@/components/ui/tooltip";
-import { cn } from "@/lib/cn";
+import { Button } from "@/shared/ui/button";
+import { Tooltip } from "@/shared/ui/tooltip";
+import { cn } from "@/shared/lib/cn";
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;

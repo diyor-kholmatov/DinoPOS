@@ -1,4 +1,4 @@
-import type { CartLine } from "@/entities/sale/model";
+import type { CartLine } from "@/modules/sales/model";
 
 export interface CheckoutTotals {
   subtotal: number;

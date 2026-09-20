@@ -1,11 +1,11 @@
 import { ChevronRight, Languages, LogOut, Moon, Settings, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SelectField } from "@/components/ui/select-field";
-import { cn } from "@/lib/cn";
-import { useSessionStore } from "@/stores/session-store";
+import { Button } from "@/shared/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { SelectField } from "@/shared/ui/select-field";
+import { cn } from "@/shared/lib/cn";
+import { useSessionStore } from "@/modules/session/model";
 
 interface ProfilePopoverProps {
   expanded: boolean;

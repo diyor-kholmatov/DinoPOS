@@ -1,15 +1,15 @@
 import { CheckCircle2, Printer, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { Sale } from "@/entities/sale/model";
-import { Button } from "@/components/ui/button";
+import type { Sale } from "@/modules/sales/model";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { formatDateTime, formatMoney, type LocaleCode } from "@/lib/format";
+} from "@/shared/ui/dialog";
+import { formatDateTime, formatMoney, type LocaleCode } from "@/shared/lib/format";
 
 interface ReceiptDialogProps {
   sale: Sale | null;

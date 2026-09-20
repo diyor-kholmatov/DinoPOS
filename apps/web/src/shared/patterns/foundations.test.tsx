@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { TableToolbar } from "@/components/data/table-toolbar";
-import { LoadingState } from "@/components/patterns/feedback-state";
-import { PageContextHeader, WorkspaceSurface } from "@/components/patterns/workspace";
+import { TableToolbar } from "@/shared/data/table-toolbar";
+import { LoadingState } from "@/shared/patterns/feedback-state";
+import { PageContextHeader, WorkspaceSurface } from "@/shared/patterns/workspace";
 
 describe("shared visual foundations", () => {
   it("keeps page context and actions in one header composition", () => {

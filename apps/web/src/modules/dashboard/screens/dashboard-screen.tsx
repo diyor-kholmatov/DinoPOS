@@ -8,28 +8,28 @@ import {
   AnalyticsFilters,
   rangeForPeriod,
   StorePicker,
-} from "@/features/analytics/analytics-filters";
+} from "@/modules/analytics";
 import {
   buildDashboardAnalytics,
   dashboardDefaultGranularity,
   dashboardGranularityOptions,
   type AnalyticsGranularity,
   type AnalyticsPeriod,
-} from "@/features/analytics/dashboard-analytics";
-import { TimeSeriesChart } from "@/components/data/analytics-charts";
-import { PageLayout } from "@/components/patterns/page";
+} from "@/modules/analytics";
+import { TimeSeriesChart } from "@/shared/data/analytics-charts";
+import { PageLayout } from "@/shared/patterns/page";
 import {
   PageContextHeader,
   SummaryList,
   WorkspaceRegion,
   WorkspaceSurface,
-} from "@/components/patterns/workspace";
-import { Button } from "@/components/ui/button";
-import { SelectField } from "@/components/ui/select-field";
-import { LOCALES, formatMoney } from "@/lib/format";
-import { cn } from "@/lib/cn";
-import { useCatalogStore } from "@/stores/catalog-store";
-import { useSessionStore } from "@/stores/session-store";
+} from "@/shared/patterns/workspace";
+import { Button } from "@/shared/ui/button";
+import { SelectField } from "@/shared/ui/select-field";
+import { LOCALES, formatMoney } from "@/shared/lib/format";
+import { cn } from "@/shared/lib/cn";
+import { useCatalogStore } from "@/modules/catalog/model";
+import { useSessionStore } from "@/modules/session/model";
 
 export function DashboardPage() {
   const { t } = useTranslation();
@@ -98,11 +98,13 @@ export function DashboardPage() {
     <PageLayout className="p-6 pb-8">
       <PageContextHeader
         context={(
-          <StorePicker
-            selectedStores={selectedStores}
-            onStoresChange={setSelectedStores}
-            prominent
-          />
+          <h1 className="min-w-0">
+            <StorePicker
+              selectedStores={selectedStores}
+              onStoresChange={setSelectedStores}
+              prominent
+            />
+          </h1>
         )}
         actions={(
           <Button asChild variant="primary" size="small" className="h-10 min-h-10 px-3 text-xs">

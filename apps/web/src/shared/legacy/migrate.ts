@@ -1,11 +1,12 @@
-import type { Customer } from "@/entities/customer/model";
-import type { Product } from "@/entities/product/model";
-import type { Register, RegisterMode } from "@/entities/register/model";
-import { SaleSchema, type CartLine, type PaymentMethod, type Sale } from "@/entities/sale/model";
-import type { Employee } from "@/entities/shift/model";
-import type { Store } from "@/entities/store/model";
-import type { LocaleCode } from "@/lib/format";
-import { LegacyStateSchema, type LegacyState } from "@/lib/legacy/schema";
+import type { Customer } from "@/modules/customers/model/customer";
+import type { Product } from "@/modules/catalog/model/product";
+import type { Register, RegisterMode } from "@/modules/session/model/register";
+import { SaleSchema, type CartLine, type PaymentMethod, type Sale } from "@/modules/sales/model/sale";
+import type { Employee } from "@/modules/session/model/employee";
+import type { Store } from "@/modules/session/model/store";
+import type { LocaleCode } from "@/shared/lib/format";
+import { LegacyStateSchema, type LegacyState } from "@/shared/legacy/schema";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
 import {
   seedCustomers,
   seedEmployees,
@@ -13,10 +14,10 @@ import {
   seedRegister,
   seedSales,
   seedStores,
-} from "@/lib/legacy/seed";
+} from "@/shared/legacy/seed";
 
-export const LEGACY_STORAGE_KEY = "retailos-unified-brief-v5-i18n";
-export const LEGACY_BACKUP_KEY = "dinopos-v5-backup";
+export const LEGACY_STORAGE_KEY = STORAGE_KEYS.legacyV5;
+export const LEGACY_BACKUP_KEY = STORAGE_KEYS.legacyV5Backup;
 export const MIGRATION_MANIFEST_KEY = "dinopos-v6";
 
 export interface BootstrapState {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { useCatalogStore } from "@/stores/catalog-store";
-import { useOperationsStore } from "@/stores/operations-store";
+import { useCatalogStore } from "@/modules/catalog/model";
+import { useOperationsStore } from "@/modules/operations/model/operations-store";
 
 describe("operations state", () => {
   beforeEach(() => {

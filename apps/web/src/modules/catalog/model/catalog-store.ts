@@ -1,6 +1,8 @@
-import { availableStock, type Product } from "@/entities/product/model";
-import type { CartLine } from "@/entities/sale/model";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import { availableStock, type Product } from "@/modules/catalog/model/product";
+import type { CartLine } from "@/modules/sales/model";
+import { bootstrap } from "@/shared/legacy/bootstrap";
+import { STORAGE_KEYS } from "@/shared/config/storage-keys";
+import { getBrowserStorage } from "@/shared/persistence/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -156,9 +158,9 @@ export const useCatalogStore = create<CatalogState>()(
       },
     }),
     {
-      name: "dinopos-v6-catalog",
+      name: STORAGE_KEYS.catalog,
       version: 1,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(getBrowserStorage),
     },
   ),
 );

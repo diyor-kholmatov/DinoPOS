@@ -6,7 +6,7 @@ import legacyUz from "@/i18n/locales/uz.json";
 import pilotEn from "@/i18n/pilot/en.json";
 import pilotRu from "@/i18n/pilot/ru.json";
 import pilotUz from "@/i18n/pilot/uz.json";
-import { bootstrap } from "@/lib/legacy/bootstrap";
+import { bootstrap } from "@/shared/legacy/bootstrap";
 
 function normalizeLegacyTemplates<T extends Record<string, unknown>>(source: T): T {
   return Object.fromEntries(Object.entries(source).map(([key, value]) => {

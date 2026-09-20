@@ -1,6 +1,6 @@
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
-import { WorkspaceSurface } from "@/components/patterns/workspace";
+import { WorkspaceSurface } from "@/shared/patterns/workspace";
 
 interface ChartCardProps {
   title: string;

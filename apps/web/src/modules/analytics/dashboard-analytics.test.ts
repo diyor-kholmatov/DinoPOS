@@ -5,7 +5,7 @@ import {
   dashboardDefaultGranularity,
   dashboardGranularityOptions,
   previousDashboardRange,
-} from "@/features/analytics/dashboard-analytics";
+} from "@/modules/analytics/dashboard-analytics";
 
 const stores = [{ id: "b1", name: "Downtown", colorIndex: 1 as const }];
 const range = {

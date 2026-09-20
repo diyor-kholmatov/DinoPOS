@@ -7,19 +7,19 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { Product } from "@/entities/product/model";
-import { DataTable } from "@/components/data/data-table";
-import { PageHeader, PageLayout, SectionHeader, SegmentedControl } from "@/components/patterns/page";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { IconButton } from "@/components/ui/icon-button";
-import { Input } from "@/components/ui/input";
-import { SearchField } from "@/components/ui/search-field";
-import { SelectField } from "@/components/ui/select-field";
-import { formatMoney } from "@/lib/format";
-import { useCatalogStore } from "@/stores/catalog-store";
-import { useSessionStore } from "@/stores/session-store";
+import type { Product } from "@/modules/catalog/model/product";
+import { DataTable } from "@/shared/data/data-table";
+import { PageHeader, PageLayout, SectionHeader, SegmentedControl } from "@/shared/patterns/page";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
+import { IconButton } from "@/shared/ui/icon-button";
+import { Input } from "@/shared/ui/input";
+import { SearchField } from "@/shared/ui/search-field";
+import { SelectField } from "@/shared/ui/select-field";
+import { formatMoney } from "@/shared/lib/format";
+import { useCatalogStore } from "@/modules/catalog/model/catalog-store";
+import { useSessionStore } from "@/modules/session/model";
 
 const ProductFormSchema = z.object({
   name: z.string().trim().min(1),

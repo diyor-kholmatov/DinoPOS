@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MemoryRouter } from "react-router-dom";
-import { NavigationRail } from "@/components/navigation/navigation-rail";
+import { NavigationRail } from "@/app/navigation/navigation-rail";
 
 const meta = { title: "Navigation/NavigationRail", component: NavigationRail, parameters: { layout: "fullscreen" } } satisfies Meta<typeof NavigationRail>;
 export default meta;

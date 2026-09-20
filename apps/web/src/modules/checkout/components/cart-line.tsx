@@ -1,8 +1,8 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import type { CartLine as CartLineModel } from "@/entities/sale/model";
-import { IconButton } from "@/components/ui/icon-button";
-import { formatMoney, type LocaleCode } from "@/lib/format";
+import type { CartLine as CartLineModel } from "@/modules/sales/model";
+import { IconButton } from "@/shared/ui/icon-button";
+import { formatMoney, type LocaleCode } from "@/shared/lib/format";
 
 interface CartLineProps {
   line: CartLineModel;

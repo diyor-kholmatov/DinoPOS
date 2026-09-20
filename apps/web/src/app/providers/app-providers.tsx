@@ -1,9 +1,9 @@
 import { useEffect, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { Toaster } from "sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 import { i18n } from "@/i18n";
-import { useSessionStore } from "@/stores/session-store";
+import { useSessionStore } from "@/modules/session/model";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const locale = useSessionStore((state) => state.locale);

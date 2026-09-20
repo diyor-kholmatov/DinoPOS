@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
-import { ErrorState } from "@/components/patterns/feedback-state";
-import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/shared/patterns/feedback-state";
+import { Button } from "@/shared/ui/button";
 
 export function RouteErrorBoundary() {
   const { t } = useTranslation();

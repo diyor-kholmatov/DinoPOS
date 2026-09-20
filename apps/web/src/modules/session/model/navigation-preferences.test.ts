@@ -4,7 +4,7 @@ import {
   moveNavigationPath,
   normalizeNavigationPreferences,
   toggleNavigationPin,
-} from "@/lib/navigation-preferences";
+} from "@/modules/session/model/navigation-preferences";
 
 describe("navigation preferences", () => {
   it("uses the approved visible modules by default", () => {

@@ -2,7 +2,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LoaderCircle } from "lucide-react";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
-import { cn } from "@/lib/cn";
+import { cn } from "@/shared/lib/cn";
 
 export const buttonVariants = cva(
   "inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-semibold transition-colors duration-150 disabled:pointer-events-none disabled:opacity-45",

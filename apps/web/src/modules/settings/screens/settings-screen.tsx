@@ -5,16 +5,16 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
-import { PageHeader, PageLayout, SectionHeader } from "@/components/patterns/page";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { SelectField } from "@/components/ui/select-field";
-import { SwitchField } from "@/components/ui/switch-field";
-import type { LocaleCode } from "@/lib/format";
-import { useSessionStore } from "@/stores/session-store";
-import { useSettingsStore } from "@/stores/settings-store";
+import { PageHeader, PageLayout, SectionHeader } from "@/shared/patterns/page";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/shared/ui/dialog";
+import { Input } from "@/shared/ui/input";
+import { SelectField } from "@/shared/ui/select-field";
+import { SwitchField } from "@/shared/ui/switch-field";
+import type { LocaleCode } from "@/shared/lib/format";
+import { useSessionStore } from "@/modules/session/model";
+import { useSettingsStore } from "@/modules/settings/model/settings-store";
 
 const CompanySchema = z.object({
   businessName: z.string().trim().min(2),
