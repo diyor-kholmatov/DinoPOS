@@ -4,8 +4,8 @@ Status: approved visual direction. Future work may restore behavior and polish s
 
 Reference screenshots:
 
-- Standard desktop: [`app-shell-responsive-1440x900.png`](./app-shell-responsive-1440x900.png)
-- Large screen: [`app-shell-responsive-2560x1440.png`](./app-shell-responsive-2560x1440.png)
+- Standard desktop: [`app-shell-responsive-1440x900.png`](./assets/app-shell-responsive-1440x900.png)
+- Large screen: [`app-shell-responsive-2560x1440.png`](./assets/app-shell-responsive-2560x1440.png)
 
 ## Visual Rules
 
