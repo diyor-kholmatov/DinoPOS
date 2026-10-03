@@ -1,0 +1,14 @@
+services:
+  dinopos-admin-api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DINOPOS_ADMIN_USERNAME: admin
+      DINOPOS_ADMIN_PASSWORD: dinopos-local
+      DINOPOS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
+    volumes:
+      - dinopos-admin-data:/data
+
+volumes:
+  dinopos-admin-data:

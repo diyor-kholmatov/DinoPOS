@@ -21,11 +21,21 @@ function AppLoadingFallback() {
 export const router = createBrowserRouter([
   {
     path: "/",
+    lazy: async () => ({ Component: (await import("@/modules/marketing")).MarketingPage }),
+    errorElement: <RouteErrorBoundary />,
+    hydrateFallbackElement: <AppLoadingFallback />,
+  },
+  {
+    path: "/admin",
+    lazy: async () => ({ Component: (await import("@/modules/marketing")).MarketingAdminPage }),
+    errorElement: <RouteErrorBoundary />,
+    hydrateFallbackElement: <AppLoadingFallback />,
+  },
+  {
     element: <AppShell />,
     errorElement: <RouteErrorBoundary />,
     hydrateFallbackElement: <AppLoadingFallback />,
     children: [
-      { index: true, element: <Navigate to="/checkout" replace /> },
       {
         path: "checkout",
         lazy: async () => {
@@ -49,7 +59,7 @@ export const router = createBrowserRouter([
       { path: "cash-operations", lazy: async () => ({ Component: (await import("@/pages/cash-operations-page")).CashOperationsPage }) },
       { path: "register-history", lazy: async () => ({ Component: (await import("@/pages/register-history-page")).RegisterHistoryPage }) },
       { path: "settings", lazy: async () => ({ Component: (await import("@/pages/settings-page")).SettingsPage }) },
-      { path: "*", element: <Navigate to="/checkout" replace /> },
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
 ], { basename: environment.routerBasename });

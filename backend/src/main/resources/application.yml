@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: dinopos-landing-admin
+  datasource:
+    url: jdbc:h2:file:${DINOPOS_DATA_PATH:./data/dinopos}
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: native
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+app:
+  admin:
+    username: ${DINOPOS_ADMIN_USERNAME:admin}
+    password: ${DINOPOS_ADMIN_PASSWORD}
+  allowed-origins: ${DINOPOS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}

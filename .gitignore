@@ -8,6 +8,8 @@ playwright-report/
 test-results/
 artifacts/
 *.tsbuildinfo
+backend/target/
+backend/data/
 
 # Local design and validation artifacts.
 UI_UX_AUDIT.md

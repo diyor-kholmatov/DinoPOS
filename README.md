@@ -1,8 +1,8 @@
 # DinoPOS
 
-DinoPOS is a client-side React and TypeScript point-of-sale workspace for retail and service businesses. The current release includes checkout, catalog, inventory, customers, sales, returns, suppliers, register operations, reports, settings, responsive navigation, and English/Russian/Uzbek localization.
+DinoPOS is a React and TypeScript retail workspace with a public product landing page. The current release includes checkout, catalog, inventory, customers, sales, returns, suppliers, register operations, reports, settings, responsive navigation, and English/Russian/Uzbek localization. A small Java service stores landing leads and editable marketing content.
 
-This repository contains **frontend code only**. Proposed backend endpoints are documented contracts, not implemented services.
+GitHub Pages serves the landing and product frontend. The Spring Boot service in `backend/` is deployed separately because GitHub Pages cannot run server applications.
 
 ## Repository layout
 
@@ -17,6 +17,7 @@ apps/web/
     i18n/         EN, RU, and UZ catalogs
     styles/       Retail OS tokens and global CSS
     stories/      Storybook examples
+backend/           Spring Boot lead and landing-content API
 docs/
   architecture/  current frontend architecture and data flow
   modules/       implemented behavior and proposed API contracts
@@ -40,7 +41,7 @@ pnpm install
 pnpm dev
 ```
 
-Vite serves the app from `apps/web`. Routes are lazy-loaded, while all production output remains in the root `dist/` directory.
+Vite serves the app from `apps/web`. `/` is the landing page, `/dashboard` and the other operational routes contain the product, and `/admin` contains the marketing admin. Routes are lazy-loaded, while all production output remains in the root `dist/` directory.
 
 ## Verification
 
@@ -48,6 +49,7 @@ Vite serves the app from `apps/web`. Routes are lazy-loaded, while all productio
 pnpm check
 pnpm test:e2e
 pnpm build-storybook
+mvn -B -f backend/pom.xml test
 ```
 
 `pnpm check` generates design tokens, validates dependency boundaries and runtime module cycles, type-checks, runs Vitest, builds the production app, and prepares GitHub Pages fallbacks.
@@ -62,6 +64,8 @@ The v6 compatibility layer reads `retailos-unified-brief-v5-i18n`, stores an unt
 
 The GitHub Pages workflow builds with the `/DinoPOS/` base path and publishes `dist/`. The finalizer supports direct React routes and legacy links such as `dashboard.html` and `checkout.html`.
 
+Set the repository Actions variable `MARKETING_API_URL` to the public HTTPS origin of the Java service. Vite exposes it to the frontend as `VITE_MARKETING_API_URL`. If the variable is absent, the landing remains fully usable for presentation, while the form and `/admin` clearly report that the API is not connected.
+
 ## Architecture rules
 
 - `shared` does not depend on product modules.
@@ -69,4 +73,4 @@ The GitHub Pages workflow builds with the `/DinoPOS/` base path and publishes `d
 - Cross-module runtime imports use public module or model entry points.
 - Direct browser storage access is restricted to the shared persistence adapter.
 - Product behavior, routes, localization, calculations, and the approved visual system must be preserved during structural changes.
-- No backend, database, ORM, server authentication, queue, or API implementation belongs in this repository task.
+- Product modules remain client-side and must not depend directly on the marketing API. The `marketing` module owns the landing/admin integration boundary.
