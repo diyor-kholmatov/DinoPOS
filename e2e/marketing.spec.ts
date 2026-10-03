@@ -5,7 +5,7 @@ test("landing tells the one-shift story without horizontal overflow", async ({ p
 
   await expect(page.getByRole("heading", { name: "Магазин работает в своём ритме." })).toBeVisible();
   await expect(page.getByRole("button", { name: /Посмотреть одну смену/ })).toBeVisible();
-  await expect(page.getByText("Интернет пропал. Продажа — нет.")).toBeAttached();
+  await expect(page.locator(".story-transcript").getByText("Интернет пропал. Продажа — нет.", { exact: true })).toBeAttached();
 
   const viewport = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,

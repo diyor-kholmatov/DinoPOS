@@ -50,7 +50,7 @@ test("scroll story, roles, and locales remain operable", async ({ page }) => {
   const closing = page.getByRole("button", { name: /22:04:/ });
   await closing.click();
   await expect(closing).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".shift-copy-body h3")).toHaveText("День закрывается одной понятной картиной");
+  await expect(page.locator(".shift-copy-body.active h3")).toHaveText("День закрывается одной понятной картиной");
 
   await page.locator("#roles").scrollIntoViewIfNeeded();
   await page.getByRole("tab", { name: "Владелец" }).click();
@@ -70,17 +70,37 @@ test("product frames stay readable, complete, and separated from copy", async ({
   await expect(heroImage).toHaveAttribute("src", /product\/dashboard\.png$/);
   await expect(heroImage).toHaveCSS("object-fit", "contain");
 
-  const offline = page.getByRole("button", { name: /14:18:/ });
-  await offline.click();
-  await expect(offline).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".shift-product .product-frame-image")).toHaveCSS("filter", "none");
+  const scenes = [
+    { button: /08:57:/, asset: /product\/opening\.jpg$/ },
+    { button: /11:42:/, asset: /product\/rush\.jpg$/ },
+    { button: /14:18:/, asset: /product\/offline\.jpg$/ },
+    { button: /18:35:/, asset: /product\/inventory\.jpg$/ },
+    { button: /22:04:/, asset: /product\/dashboard\.png$/ },
+  ];
+  const sources = new Set<string>();
 
-  const inventory = page.getByRole("button", { name: /18:35:/ });
-  await inventory.click();
-  await expect(inventory).toHaveAttribute("aria-pressed", "true");
+  for (const scene of scenes) {
+    const button = page.getByRole("button", { name: scene.button });
+    await button.click();
+    await expect(button).toHaveAttribute("aria-pressed", "true");
+
+    const activeImage = page.locator(".shift-product .product-frame-image.active");
+    await expect(activeImage).toHaveAttribute("src", scene.asset);
+    await expect(activeImage).toHaveCSS("object-fit", "contain");
+    await expect(activeImage).toHaveCSS("filter", "none");
+    sources.add(await activeImage.getAttribute("src") ?? "");
+  }
+
+  expect(sources.size).toBe(5);
+
+  const frameRatio = await page.locator(".shift-product .product-frame").evaluate((frame) => {
+    const bounds = frame.getBoundingClientRect();
+    return bounds.width / bounds.height;
+  });
+  expect(frameRatio).toBeCloseTo(16 / 10, 2);
 
   const separation = await page.evaluate(() => {
-    const heading = document.querySelector<HTMLElement>(".shift-copy-body h3");
+    const heading = document.querySelector<HTMLElement>(".shift-copy-body.active h3");
     const frame = document.querySelector<HTMLElement>(".shift-product .product-frame");
     if (!heading || !frame) throw new Error("Story layout is missing");
     const range = document.createRange();

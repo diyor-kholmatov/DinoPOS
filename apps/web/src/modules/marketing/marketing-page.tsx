@@ -16,12 +16,14 @@ const locales: MarketingLocale[] = ["ru", "uz", "en"];
 const publicAsset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 const sceneAssets: Record<ShiftTone, string> = {
-  opening: publicAsset("product/checkout.png"),
-  rush: publicAsset("product/checkout.png"),
-  offline: publicAsset("product/checkout.png"),
-  inventory: publicAsset("product/dashboard.png"),
+  opening: publicAsset("product/opening.jpg"),
+  rush: publicAsset("product/rush.jpg"),
+  offline: publicAsset("product/offline.jpg"),
+  inventory: publicAsset("product/inventory.jpg"),
   closing: publicAsset("product/dashboard.png"),
 };
+
+const sceneTones = Object.keys(sceneAssets) as ShiftTone[];
 
 function DinoMark() {
   return (
@@ -39,35 +41,28 @@ function scrollTo(id: string) {
 function ProductFrame({
   alt,
   scene,
-  reducedMotion,
+  stacked = false,
 }: {
   alt: string;
   scene: ShiftTone;
-  reducedMotion: boolean | null;
+  stacked?: boolean;
 }) {
+  const tones = stacked ? sceneTones : [scene];
+
   return (
     <div className={`product-frame product-frame--${scene}`}>
-      <div className="product-frame-bar" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <b>DinoPOS</b>
-      </div>
       <div className="product-frame-viewport">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.img
-            alt={alt}
-            animate={{ opacity: 1, scale: 1 }}
-            className="product-frame-image"
+        {tones.map((tone) => (
+          <img
+            alt={tone === scene ? alt : ""}
+            aria-hidden={tone === scene ? undefined : true}
+            className={`product-frame-image ${tone === scene ? "active" : ""}`}
             decoding="async"
-            exit={reducedMotion ? undefined : { opacity: 0, scale: 1.012 }}
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.99 }}
-            key={`${scene}-${sceneAssets[scene]}`}
+            key={tone}
             loading="eager"
-            src={sceneAssets[scene]}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            src={sceneAssets[tone]}
           />
-        </AnimatePresence>
+        ))}
       </div>
       <div className="product-frame-shine" aria-hidden="true" />
     </div>
@@ -123,7 +118,7 @@ export function MarketingPage() {
     if (!story) return;
     const start = story.getBoundingClientRect().top + window.scrollY;
     const distance = Math.max(0, story.offsetHeight - window.innerHeight);
-    const progress = current.shiftEvents.length <= 1 ? 0 : (index + 0.12) / current.shiftEvents.length;
+    const progress = current.shiftEvents.length <= 1 ? 0 : (index + 0.5) / current.shiftEvents.length;
     window.scrollTo({ top: start + distance * progress, behavior: reducedMotion ? "auto" : "smooth" });
   }
 
@@ -191,7 +186,7 @@ export function MarketingPage() {
             </div>
           </motion.div>
           <motion.div className="landing-hero-product" style={{ scale: heroFrameScale, y: heroFrameY }}>
-            <ProductFrame alt={current.shiftEvents[4]?.title ?? current.heroTitle} reducedMotion={reducedMotion} scene="closing" />
+            <ProductFrame alt={current.shiftEvents[4]?.title ?? current.heroTitle} scene="closing" />
           </motion.div>
         </section>
 
@@ -221,21 +216,20 @@ export function MarketingPage() {
                 </div>
                 <span>{String(current.shiftEvents.length).padStart(2, "0")}</span>
               </div>
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="shift-copy-body"
-                  exit={reducedMotion ? undefined : { opacity: 0, y: -18 }}
-                  initial={reducedMotion ? false : { opacity: 0, y: 22 }}
-                  key={`${locale}-${activeEvent.time}`}
-                  transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="shift-time">{activeEvent.time}</span>
-                  <small>{activeEvent.label}</small>
-                  <h3>{activeEvent.title}</h3>
-                  <p>{activeEvent.description}</p>
-                </motion.div>
-              </AnimatePresence>
+              <div className="shift-copy-stack">
+                {current.shiftEvents.map((event, index) => (
+                  <div
+                    aria-hidden={activeShift === index ? undefined : true}
+                    className={`shift-copy-body ${activeShift === index ? "active" : ""}`}
+                    key={`${locale}-${event.time}-${event.tone}`}
+                  >
+                    <span className="shift-time">{event.time}</span>
+                    <small>{event.label}</small>
+                    <h3>{event.title}</h3>
+                    <p>{event.description}</p>
+                  </div>
+                ))}
+              </div>
               <div className="shift-steps" aria-label={current.storyKicker}>
                 {current.shiftEvents.map((event, index) => (
                   <button
@@ -253,7 +247,7 @@ export function MarketingPage() {
               </div>
             </div>
             <div className="shift-product">
-              <ProductFrame alt={activeEvent.title} reducedMotion={reducedMotion} scene={activeEvent.tone} />
+              <ProductFrame alt={activeEvent.title} scene={activeEvent.tone} stacked />
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   animate={{ opacity: 1, y: 0 }}
@@ -323,7 +317,7 @@ export function MarketingPage() {
                     alt={current.roleCards[activeRole]?.title}
                     decoding="async"
                     loading="lazy"
-                    src={activeRole === 0 ? sceneAssets.rush : sceneAssets.closing}
+                    src={activeRole === 0 ? sceneAssets.rush : activeRole === 1 ? sceneAssets.inventory : sceneAssets.closing}
                   />
                 </motion.div>
               </AnimatePresence>
