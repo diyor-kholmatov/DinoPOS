@@ -62,6 +62,37 @@ test("scroll story, roles, and locales remain operable", async ({ page }) => {
   await expect(page.locator('a[href*="dashboard"]')).toHaveCount(0);
 });
 
+test("product frames stay readable, complete, and separated from copy", async ({ page }) => {
+  await page.setViewportSize({ width: 2048, height: 1152 });
+  await waitForLanding(page);
+
+  const heroImage = page.locator(".landing-hero .product-frame-image");
+  await expect(heroImage).toHaveAttribute("src", /product\/dashboard\.png$/);
+  await expect(heroImage).toHaveCSS("object-fit", "contain");
+
+  const offline = page.getByRole("button", { name: /14:18:/ });
+  await offline.click();
+  await expect(offline).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".shift-product .product-frame-image")).toHaveCSS("filter", "none");
+
+  const inventory = page.getByRole("button", { name: /18:35:/ });
+  await inventory.click();
+  await expect(inventory).toHaveAttribute("aria-pressed", "true");
+
+  const separation = await page.evaluate(() => {
+    const heading = document.querySelector<HTMLElement>(".shift-copy-body h3");
+    const frame = document.querySelector<HTMLElement>(".shift-product .product-frame");
+    if (!heading || !frame) throw new Error("Story layout is missing");
+    const range = document.createRange();
+    range.selectNodeContents(heading);
+    return {
+      textRight: range.getBoundingClientRect().right,
+      frameLeft: frame.getBoundingClientRect().left,
+    };
+  });
+  expect(separation.textRight).toBeLessThan(separation.frameLeft);
+});
+
 test("landing passes automated accessibility checks and reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await waitForLanding(page);

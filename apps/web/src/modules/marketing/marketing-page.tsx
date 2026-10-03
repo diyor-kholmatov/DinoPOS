@@ -53,20 +53,22 @@ function ProductFrame({
         <span />
         <b>DinoPOS</b>
       </div>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.img
-          alt={alt}
-          animate={{ opacity: 1, scale: 1 }}
-          className="product-frame-image"
-          decoding="async"
-          exit={reducedMotion ? undefined : { opacity: 0, scale: 1.018 }}
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.985 }}
-          key={`${scene}-${sceneAssets[scene]}`}
-          loading="eager"
-          src={sceneAssets[scene]}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </AnimatePresence>
+      <div className="product-frame-viewport">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.img
+            alt={alt}
+            animate={{ opacity: 1, scale: 1 }}
+            className="product-frame-image"
+            decoding="async"
+            exit={reducedMotion ? undefined : { opacity: 0, scale: 1.012 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.99 }}
+            key={`${scene}-${sceneAssets[scene]}`}
+            loading="eager"
+            src={sceneAssets[scene]}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </AnimatePresence>
+      </div>
       <div className="product-frame-shine" aria-hidden="true" />
     </div>
   );
@@ -189,7 +191,7 @@ export function MarketingPage() {
             </div>
           </motion.div>
           <motion.div className="landing-hero-product" style={{ scale: heroFrameScale, y: heroFrameY }}>
-            <ProductFrame alt={current.shiftEvents[1]?.title ?? current.heroTitle} reducedMotion={reducedMotion} scene="rush" />
+            <ProductFrame alt={current.shiftEvents[4]?.title ?? current.heroTitle} reducedMotion={reducedMotion} scene="closing" />
           </motion.div>
         </section>
 

@@ -2,8 +2,8 @@ import { chromium } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-const checkout = await readFile(resolve("apps/web/public/product/checkout.png"));
-const checkoutData = `data:image/png;base64,${checkout.toString("base64")}`;
+const dashboard = await readFile(resolve("apps/web/public/product/dashboard.png"));
+const dashboardData = `data:image/png;base64,${dashboard.toString("base64")}`;
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 
@@ -55,7 +55,7 @@ await page.setContent(`
         <h1>Магазин работает<br />в своём ритме.</h1>
         <p>Продажи, товары, смены и остатки — в одном понятном рабочем пространстве.</p>
       </main>
-      <div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="${checkoutData}" alt="" /></div>
+      <div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="${dashboardData}" alt="" /></div>
       <div class="accent"></div>
     </body>
   </html>
