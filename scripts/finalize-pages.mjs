@@ -5,6 +5,7 @@ await writeFile("dist/.nojekyll", "", "utf8");
 
 const index = await readFile("dist/index.html", "utf8");
 const legacyRoutes = {
+  "admin.html": "admin",
   "dashboard.html": "dashboard",
   "checkout.html": "checkout",
   "catalog.html": "catalog",
