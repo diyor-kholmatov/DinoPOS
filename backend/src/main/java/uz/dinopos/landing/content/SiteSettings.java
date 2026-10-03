@@ -9,27 +9,27 @@ import jakarta.persistence.Table;
 public class SiteSettings {
     @Id
     private Long id;
-    private String starterPrice;
-    private String standardPrice;
-    private String proPrice;
     private String contactEmail;
+    private String contactPhone;
+    private String contactTelegram;
+    private Integer contentVersion;
 
     protected SiteSettings() {}
 
-    public SiteSettings(Long id, String starterPrice, String standardPrice, String proPrice, String contactEmail) {
+    public SiteSettings(Long id, String contactEmail, String contactPhone, String contactTelegram) {
         this.id = id;
-        update(starterPrice, standardPrice, proPrice, contactEmail);
+        update(contactEmail, contactPhone, contactTelegram);
     }
 
-    public void update(String starterPrice, String standardPrice, String proPrice, String contactEmail) {
-        this.starterPrice = starterPrice;
-        this.standardPrice = standardPrice;
-        this.proPrice = proPrice;
+    public void update(String contactEmail, String contactPhone, String contactTelegram) {
         this.contactEmail = contactEmail;
+        this.contactPhone = contactPhone;
+        this.contactTelegram = contactTelegram;
+        this.contentVersion = 2;
     }
 
-    public String getStarterPrice() { return starterPrice; }
-    public String getStandardPrice() { return standardPrice; }
-    public String getProPrice() { return proPrice; }
     public String getContactEmail() { return contactEmail; }
+    public String getContactPhone() { return contactPhone; }
+    public String getContactTelegram() { return contactTelegram; }
+    public Integer getContentVersion() { return contentVersion; }
 }

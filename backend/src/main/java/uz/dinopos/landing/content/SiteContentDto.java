@@ -10,8 +10,7 @@ import jakarta.validation.constraints.Size;
 
 public record SiteContentDto(
     @NotNull @Size(min = 3, max = 3) Map<String, @Valid LocalizedContentDto> locales,
-    @NotBlank @Size(max = 40) String starterPrice,
-    @NotBlank @Size(max = 40) String standardPrice,
-    @NotBlank @Size(max = 40) String proPrice,
-    @NotBlank @Email @Size(max = 180) String contactEmail
+    @NotBlank @Email @Size(max = 180) String contactEmail,
+    @NotBlank @Size(max = 80) String contactPhone,
+    @NotBlank @Size(max = 80) String contactTelegram
 ) {}

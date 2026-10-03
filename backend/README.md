@@ -11,6 +11,8 @@ Small Spring Boot 4 / Java 21 service for the public landing page:
 
 Admin endpoints use HTTP Basic authentication. Public content and leads use CORS restricted to `DINOPOS_ALLOWED_ORIGINS`.
 
+The editable content contract keeps the visual composition safe: every locale has one hero, exactly five shift moments, three role stories, one founder note, and three pilot points. Editors can change the copy and event times without touching layout code.
+
 ## Local run
 
 ```bash
